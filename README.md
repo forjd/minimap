@@ -91,12 +91,6 @@ Prefer shorthand?
 bun i -g @forjd/minimap
 ```
 
-You can also run it with npm:
-
-```bash
-npx @forjd/minimap --help
-```
-
 For local development:
 
 ```bash
