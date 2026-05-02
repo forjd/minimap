@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "minimap",
+      "name": "@forjd/minimap",
       "dependencies": {
         "commander": "^14.0.2",
         "zod": "^4.1.12",

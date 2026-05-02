@@ -70,6 +70,12 @@ Minimap writes only inside its managed block:
 
 Minimap is Bun-native.
 
+After the first npm release:
+
+```bash
+bunx @forjd/minimap --help
+```
+
 From source:
 
 ```bash
@@ -239,6 +245,10 @@ The test suite uses fixture repositories and snapshots for generated output.
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Releasing
+
+See [RELEASING.md](RELEASING.md).
 
 ## Security
 
