@@ -3,6 +3,8 @@
 Deterministic repository context for coding agents.
 
 [![CI](https://github.com/forjd/minimap/actions/workflows/ci.yml/badge.svg)](https://github.com/forjd/minimap/actions/workflows/ci.yml)
+[![npm version](https://img.shields.io/npm/v/@forjd/minimap.svg)](https://www.npmjs.com/package/@forjd/minimap)
+[![npm provenance](https://img.shields.io/badge/npm-provenance-brightgreen.svg)](https://www.npmjs.com/package/@forjd/minimap)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Runtime: Bun](https://img.shields.io/badge/runtime-Bun-black.svg)](https://bun.sh)
 [![Status: MVP](https://img.shields.io/badge/status-MVP-orange.svg)](#project-status)
@@ -70,34 +72,33 @@ Minimap writes only inside its managed block:
 
 Minimap is Bun-native.
 
-After the first npm release:
+Run with Bun:
 
 ```bash
-bunx @forjd/minimap --help
+bunx @forjd/minimap scan
 ```
 
-From source:
+Or install globally:
+
+```bash
+bun install -g @forjd/minimap
+minimap --help
+```
+
+You can also run it with npm:
+
+```bash
+npx @forjd/minimap --help
+```
+
+For local development:
 
 ```bash
 git clone https://github.com/forjd/minimap.git
 cd minimap
 bun install
-```
-
-Run without linking:
-
-```bash
 bun run src/cli.ts --help
 ```
-
-Link the binary during development:
-
-```bash
-bun link
-minimap --help
-```
-
-When Minimap is published to a package registry, it will be usable through the package runner for that registry. Until then, source checkout is the supported install path.
 
 ## Commands
 
