@@ -106,6 +106,28 @@ bun install
 bun run src/cli.ts --help
 ```
 
+## Agent Skill
+
+Minimap ships a portable agent skill for agents that support the open skills format. It teaches agents to preview, write, and check Minimap-managed context blocks instead of editing them by hand.
+
+Install it with the `skills` CLI:
+
+```bash
+npx skills add forjd/minimap --skill minimap
+```
+
+Or with Bun:
+
+```bash
+bunx skills add forjd/minimap --skill minimap
+```
+
+Install it for all detected agents:
+
+```bash
+npx skills add forjd/minimap --skill minimap --agent '*'
+```
+
 ## Commands
 
 ### Scan

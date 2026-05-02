@@ -25,6 +25,7 @@
   },
   "files": [
     "bin",
+    "skills",
     "src",
     "README.md",
     "LICENSE"

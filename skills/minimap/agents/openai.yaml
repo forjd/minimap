@@ -1,0 +1,7 @@
+interface:
+  display_name: "Minimap"
+  short_description: "Keep agent repository context current"
+  default_prompt: "Use $minimap to update and verify this repository's agent context."
+
+policy:
+  allow_implicit_invocation: true
