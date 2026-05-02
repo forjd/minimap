@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/forjd/minimap/compare/v1.0.1...v1.0.2) (2026-05-02)
+
+
+### Bug Fixes
+
+* read cli version from package metadata ([f820206](https://github.com/forjd/minimap/commit/f8202062f4ce133a58f8ca5b08b67a579b2d9bc4))
+
 ## [1.0.1](https://github.com/forjd/minimap/compare/v1.0.0...v1.0.1) (2026-05-02)
 
 
