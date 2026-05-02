@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
-import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { randomUUID } from "node:crypto";
+import { mkdtemp, rm, symlink, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 
@@ -28,6 +29,26 @@ describe("createRepoFileMap", () => {
       expect(() => files.exists("../outside.txt")).toThrow(
         "Refusing to read outside repository: ../outside.txt",
       );
+    });
+  });
+
+  test("refuses to follow symlinked files outside the repository", async () => {
+    await withTempRepo(async (dir) => {
+      const outside = join(tmpdir(), `minimap-outside-${randomUUID()}.json`);
+      try {
+        await writeFile(outside, '{"scripts":{"test":"bun test"}}');
+        await symlink(outside, join(dir, "package.json"));
+
+        const files = createRepoFileMap(dir, new Set(), []);
+        expect(() => files.exists("package.json")).toThrow(
+          "Refusing to read outside repository: package.json",
+        );
+        await expect(files.readJson("package.json")).rejects.toThrow(
+          "Refusing to read outside repository: package.json",
+        );
+      } finally {
+        await rm(outside, { force: true });
+      }
     });
   });
 

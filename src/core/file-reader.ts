@@ -1,17 +1,30 @@
-import { join, normalize, relative } from "node:path";
-import { existsSync } from "node:fs";
+import { existsSync, realpathSync } from "node:fs";
+import { realpath } from "node:fs/promises";
+import { isAbsolute, relative, resolve } from "node:path";
 
 import type { RepoFileMap } from "./signals";
 
 const maxReadBytes = 256_000;
 
+function isInside(base: string, path: string): boolean {
+  const rel = relative(base, path);
+  return rel === "" || (!rel.startsWith("..") && !isAbsolute(rel));
+}
+
 function safePath(cwd: string, path: string): string {
-  const fullPath = normalize(join(cwd, path));
-  const rel = relative(cwd, fullPath);
-  if (rel.startsWith("..") || rel === "..") {
+  const fullPath = resolve(cwd, path);
+  if (!isInside(cwd, fullPath)) {
     throw new Error(`Refusing to read outside repository: ${path}`);
   }
   return fullPath;
+}
+
+async function safeRealPath(cwd: string, fullPath: string, label: string): Promise<string> {
+  const realPath = await realpath(fullPath);
+  if (!isInside(cwd, realPath)) {
+    throw new Error(`Refusing to read outside repository: ${label}`);
+  }
+  return realPath;
 }
 
 export function createRepoFileMap(
@@ -19,6 +32,7 @@ export function createRepoFileMap(
   filesRead: Set<string>,
   warnings: string[],
 ): RepoFileMap {
+  const realCwd = realpathSync(cwd);
   const existsCache = new Map<string, boolean>();
   const textCache = new Map<string, Promise<string | null>>();
   const jsonCache = new Map<string, Promise<unknown | null>>();
@@ -29,7 +43,14 @@ export function createRepoFileMap(
     exists(path) {
       const cached = existsCache.get(path);
       if (cached !== undefined) return cached;
-      const exists = existsSync(safePath(cwd, path));
+      const filePath = safePath(cwd, path);
+      const exists = existsSync(filePath);
+      if (exists) {
+        const realPath = realpathSync(filePath);
+        if (!isInside(realCwd, realPath)) {
+          throw new Error(`Refusing to read outside repository: ${path}`);
+        }
+      }
       existsCache.set(path, exists);
       return exists;
     },
@@ -42,13 +63,14 @@ export function createRepoFileMap(
         const filePath = safePath(cwd, path);
         const file = Bun.file(filePath);
         if (!(await file.exists())) return null;
+        const realPath = await safeRealPath(realCwd, filePath, path);
         existsCache.set(path, true);
         if (file.size > maxReadBytes) {
           warnings.push(`Skipped ${path}: file is larger than ${maxReadBytes} bytes.`);
           return null;
         }
         filesRead.add(path);
-        return file.text();
+        return Bun.file(realPath).text();
       };
 
       const promise = read();

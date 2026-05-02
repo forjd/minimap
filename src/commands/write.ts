@@ -3,7 +3,12 @@ import { Command } from "commander";
 import { scanRepo } from "../core/scan-repo";
 import { renderAgentContext } from "../renderers/render-agent-context";
 import { ManagedBlockError, upsertManagedBlock } from "../writers/managed-block";
-import { ensureParentDirectory, resolveCwd, resolveTarget } from "../utils/paths";
+import {
+  assertExistingTargetInside,
+  ensureSafeTarget,
+  resolveCwd,
+  resolveTarget,
+} from "../utils/paths";
 
 export function createWriteCommand(): Command {
   return new Command("write")
@@ -15,6 +20,7 @@ export function createWriteCommand(): Command {
       const cwd = resolveCwd(options.cwd);
       const targetPath = resolveTarget(cwd, options.target);
       const targetFile = Bun.file(targetPath);
+      await assertExistingTargetInside(cwd, targetPath, options.target);
       const existing = (await targetFile.exists()) ? await targetFile.text() : "";
       const block = renderAgentContext(await scanRepo(cwd));
 
@@ -32,7 +38,7 @@ export function createWriteCommand(): Command {
         return;
       }
 
-      await ensureParentDirectory(targetPath);
+      await ensureSafeTarget(cwd, targetPath, options.target);
       await Bun.write(targetPath, nextContent);
       console.log(`Updated ${options.target}.`);
     });

@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, test } from "bun:test";
 import type { Command } from "commander";
-import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, rm, symlink, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 
@@ -145,6 +145,54 @@ describe("commands", () => {
       );
     } finally {
       await rm(dir, { recursive: true, force: true });
+    }
+  });
+
+  test("write rejects targets outside the repository", async () => {
+    const dir = await mkdtemp(join(tmpdir(), "minimap-command-"));
+    try {
+      await writeFile(join(dir, "composer.json"), '{"require":{"php":"^8.3"}}');
+
+      await expect(
+        parseCommand(createWriteCommand(), ["--cwd", dir, "--target", "../AGENTS.md"]),
+      ).rejects.toThrow("Refusing to target outside repository: ../AGENTS.md");
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
+  });
+
+  test("write rejects symlinked target files outside the repository", async () => {
+    const dir = await mkdtemp(join(tmpdir(), "minimap-command-"));
+    const outsideDir = await mkdtemp(join(tmpdir(), "minimap-outside-"));
+    try {
+      await writeFile(join(dir, "composer.json"), '{"require":{"php":"^8.3"}}');
+      await writeFile(join(outsideDir, "AGENTS.md"), "# Outside\n");
+      await symlink(join(outsideDir, "AGENTS.md"), join(dir, "AGENTS.md"));
+
+      await expect(
+        parseCommand(createWriteCommand(), ["--cwd", dir, "--target", "AGENTS.md"]),
+      ).rejects.toThrow("Refusing to target outside repository: AGENTS.md");
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+      await rm(outsideDir, { recursive: true, force: true });
+    }
+  });
+
+  test("write rejects symlinked target directories outside the repository", async () => {
+    const dir = await mkdtemp(join(tmpdir(), "minimap-command-"));
+    const outsideDir = await mkdtemp(join(tmpdir(), "minimap-outside-"));
+    try {
+      await writeFile(join(dir, "composer.json"), '{"require":{"php":"^8.3"}}');
+      await mkdir(join(outsideDir, "docs"));
+      await symlink(join(outsideDir, "docs"), join(dir, "docs"));
+
+      await expect(
+        parseCommand(createWriteCommand(), ["--cwd", dir, "--target", "docs/AGENTS.md"]),
+      ).rejects.toThrow("Refusing to target outside repository: docs/AGENTS.md");
+      expect(await Bun.file(join(outsideDir, "docs", "AGENTS.md")).exists()).toBe(false);
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+      await rm(outsideDir, { recursive: true, force: true });
     }
   });
 

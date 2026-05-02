@@ -4,7 +4,7 @@ import { scanRepo } from "../core/scan-repo";
 import { renderAgentContext } from "../renderers/render-agent-context";
 import { getManagedBlock, ManagedBlockError, normalizeBlock } from "../writers/managed-block";
 import { simpleDiffMessage } from "../writers/diff";
-import { resolveCwd, resolveTarget } from "../utils/paths";
+import { assertExistingTargetInside, resolveCwd, resolveTarget } from "../utils/paths";
 
 export function createCheckCommand(): Command {
   return new Command("check")
@@ -21,6 +21,7 @@ export function createCheckCommand(): Command {
         return;
       }
 
+      await assertExistingTargetInside(cwd, targetPath, options.target);
       const content = await targetFile.text();
       let existingBlock: string | null;
       try {
