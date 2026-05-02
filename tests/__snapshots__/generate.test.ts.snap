@@ -33,12 +33,6 @@ exports[`renderAgentContext renders node vite vue snapshot 1`] = `
     <item>Use ES module syntax consistently with package.json type=module.</item>
   </project_conventions>
 
-  <agent_guidance>
-    <rule>Inspect nearby files before introducing new patterns.</rule>
-    <rule>Prefer existing project conventions over generic framework defaults.</rule>
-    <rule>When changing behaviour, add or update tests where practical.</rule>
-  </agent_guidance>
-
   <evidence>
     <item source="package.json">Detected JavaScript: package.json present.</item>
     <item source="package.json">Detected TypeScript: typescript dependency detected.</item>
@@ -84,12 +78,6 @@ exports[`renderAgentContext renders node cli snapshot 1`] = `
   <project_conventions>
     <item>Use ES module syntax consistently with package.json type=module.</item>
   </project_conventions>
-
-  <agent_guidance>
-    <rule>Inspect nearby files before introducing new patterns.</rule>
-    <rule>Prefer existing project conventions over generic framework defaults.</rule>
-    <rule>When changing behaviour, add or update tests where practical.</rule>
-  </agent_guidance>
 
   <evidence>
     <item source="package.json">Detected JavaScript: package.json present.</item>
@@ -147,17 +135,6 @@ exports[`renderAgentContext renders laravel vue inertia snapshot 1`] = `
     <item>For frontend changes, inspect existing Inertia pages and Vue components before adding new patterns.</item>
     <item>Use existing Tailwind conventions. Do not create a Tailwind config file unless the repo already has one.</item>
   </project_conventions>
-
-  <agent_guidance>
-    <rule>Inspect nearby files before introducing new patterns.</rule>
-    <rule>Prefer existing project conventions over generic framework defaults.</rule>
-    <rule>When changing behaviour, add or update tests where practical.</rule>
-    <rule>Prefer existing Laravel conventions in this repository over generic patterns.</rule>
-    <rule>Use Form Requests for validation if the project already uses them.</rule>
-    <rule>Use Eloquent relationships and query scopes where consistent with nearby code.</rule>
-    <rule>Do not introduce a repository layer unless the repository already uses one.</rule>
-    <rule>Do not run destructive database, deployment, publishing, or volume deletion commands unless explicitly requested.</rule>
-  </agent_guidance>
 
   <evidence>
     <item source="package.json">Detected JavaScript: package.json present.</item>

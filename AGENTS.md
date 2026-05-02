@@ -37,12 +37,6 @@
     <item>Use ES module syntax consistently with package.json type=module.</item>
   </project_conventions>
 
-  <agent_guidance>
-    <rule>Inspect nearby files before introducing new patterns.</rule>
-    <rule>Prefer existing project conventions over generic framework defaults.</rule>
-    <rule>When changing behaviour, add or update tests where practical.</rule>
-  </agent_guidance>
-
   <evidence>
     <item source="package.json">Detected JavaScript: package.json present.</item>
     <item source="package.json">Detected TypeScript: typescript dependency detected.</item>

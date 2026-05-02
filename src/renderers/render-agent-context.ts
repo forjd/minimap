@@ -122,41 +122,6 @@ function renderProjectConventions(scan: RepoScan): string[] {
   ];
 }
 
-function guidance(scan: RepoScan): string[] {
-  const rules = [
-    "Inspect nearby files before introducing new patterns.",
-    "Prefer existing project conventions over generic framework defaults.",
-    "When changing behaviour, add or update tests where practical.",
-  ];
-
-  if (hasSignal(scan, "Laravel")) {
-    rules.push("Prefer existing Laravel conventions in this repository over generic patterns.");
-    rules.push("Use Form Requests for validation if the project already uses them.");
-    rules.push("Use Eloquent relationships and query scopes where consistent with nearby code.");
-    rules.push("Do not introduce a repository layer unless the repository already uses one.");
-  }
-
-  const hasDanger = scan.signals.some(
-    (signal) => signal.kind === "risk" || signal.metadata?.category === "dangerous",
-  );
-  if (hasDanger || hasSignal(scan, "Laravel")) {
-    rules.push(
-      "Do not run destructive database, deployment, publishing, or volume deletion commands unless explicitly requested.",
-    );
-  }
-
-  return [...new Set(rules)];
-}
-
-function renderGuidance(scan: RepoScan): string[] {
-  return [
-    "  <agent_guidance>",
-    ...guidance(scan).map((rule) => `    <rule>${xmlText(rule)}</rule>`),
-    "  </agent_guidance>",
-    "",
-  ];
-}
-
 function renderEvidence(scan: RepoScan): string[] {
   const seen = new Set<string>();
   const items = scan.signals
@@ -216,7 +181,6 @@ export function renderAgentContext(scan: RepoScan): string {
     ...renderPackageManagers(packageManagers),
     ...renderCommands(commands),
     ...renderProjectConventions(scan),
-    ...renderGuidance(scan),
     ...renderEvidence(scan),
     ...renderWarnings(scan),
     "</repo_context>",
