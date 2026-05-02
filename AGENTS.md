@@ -1,8 +1,5 @@
-@/Users/dan/.codex/RTK.md
-
 # Repository Instructions
 
-- Follow the referenced RTK instructions: prefix shell commands with `rtk`.
 - Do not manually edit content inside the Minimap managed block below. Refresh it with `bun run src/cli.ts write --target AGENTS.md`.
 - Use Bun for local development and validation.
 - Use Conventional Commits for commit messages.
