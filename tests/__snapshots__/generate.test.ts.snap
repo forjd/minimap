@@ -56,6 +56,55 @@ exports[`renderAgentContext renders node vite vue snapshot 1`] = `
 "
 `;
 
+exports[`renderAgentContext renders node cli snapshot 1`] = `
+"<!-- minimap:start -->
+<repo_context generated_by="minimap" schema_version="1">
+  <summary>
+    TypeScript CLI project using npm.
+  </summary>
+
+  <stack>
+    <language name="JavaScript" confidence="high" evidence="package.json present" />
+    <language name="TypeScript" confidence="high" evidence="typescript dependency detected" />
+    <tool name="oxlint" confidence="high" evidence="oxlint dependency detected" />
+    <architecture name="CLI application" confidence="high" evidence="bin field present" />
+  </stack>
+
+  <package_managers>
+    <manager name="npm" confidence="low" evidence="package.json present" />
+  </package_managers>
+
+  <commands>
+    <command name="cli_dev" value="npm run dev" confidence="medium" category="dev" />
+    <command name="cli_lint" value="npm run lint" confidence="medium" category="lint" />
+    <command name="test" value="npm run test" confidence="medium" category="test" />
+    <command name="typecheck" value="npm run typecheck" confidence="medium" category="typecheck" />
+  </commands>
+
+  <project_conventions>
+    <item>Use ES module syntax consistently with package.json type=module.</item>
+  </project_conventions>
+
+  <agent_guidance>
+    <rule>Inspect nearby files before introducing new patterns.</rule>
+    <rule>Prefer existing project conventions over generic framework defaults.</rule>
+    <rule>When changing behaviour, add or update tests where practical.</rule>
+  </agent_guidance>
+
+  <evidence>
+    <item source="package.json">Detected JavaScript: package.json present.</item>
+    <item source="package.json">Detected TypeScript: typescript dependency detected.</item>
+    <item source="package.json">Detected oxlint: oxlint dependency detected.</item>
+    <item source="package.json">Detected npm: package.json present.</item>
+    <item source="package.json">Detected CLI application: bin field present.</item>
+    <item source="package.json">Detected ES modules: type is "module".</item>
+  </evidence>
+
+</repo_context>
+<!-- minimap:end -->
+"
+`;
+
 exports[`renderAgentContext renders laravel vue inertia snapshot 1`] = `
 "<!-- minimap:start -->
 <repo_context generated_by="minimap" schema_version="1">

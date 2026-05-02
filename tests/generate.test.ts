@@ -12,6 +12,11 @@ describe("renderAgentContext", () => {
     expect(renderAgentContext(scan)).toMatchSnapshot();
   });
 
+  test("renders node cli snapshot", async () => {
+    const scan = await scanRepo(fixture("node-cli"));
+    expect(renderAgentContext(scan)).toMatchSnapshot();
+  });
+
   test("renders laravel vue inertia snapshot", async () => {
     const scan = await scanRepo(fixture("laravel-vue-inertia"));
     expect(renderAgentContext(scan)).toMatchSnapshot();

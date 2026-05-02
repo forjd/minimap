@@ -20,8 +20,10 @@ function summarize(scan: RepoScan): string {
   if (hasSignal(scan, "React")) parts.push("React");
   if (hasSignal(scan, "Next.js")) parts.push("Next.js");
   if (hasSignal(scan, "PHP") && !parts.includes("Laravel")) parts.push("PHP");
-  if (hasSignal(scan, "TypeScript")) parts.push("TypeScript");
-  else if (hasSignal(scan, "JavaScript")) parts.push("JavaScript");
+  const isCliApp = hasSignal(scan, "CLI application");
+  if (hasSignal(scan, "TypeScript")) parts.push(isCliApp ? "TypeScript CLI" : "TypeScript");
+  else if (hasSignal(scan, "JavaScript")) parts.push(isCliApp ? "JavaScript CLI" : "JavaScript");
+  else if (isCliApp) parts.push("CLI");
 
   const tools = [
     "Composer",
@@ -44,6 +46,7 @@ function elementName(signal: RepoSignal): string {
   if (signal.kind === "language") return "language";
   if (signal.kind === "framework") return "framework";
   if (signal.kind === "test-framework") return "test_framework";
+  if (signal.kind === "architecture") return "architecture";
   return "tool";
 }
 
@@ -192,7 +195,13 @@ function renderWarnings(scan: RepoScan): string[] {
 }
 
 export function renderAgentContext(scan: RepoScan): string {
-  const stack = signalsByKind(scan, ["language", "framework", "tool", "test-framework"]);
+  const stack = signalsByKind(scan, [
+    "language",
+    "framework",
+    "tool",
+    "test-framework",
+    "architecture",
+  ]);
   const packageManagers = signalsByKind(scan, ["package-manager"]);
   const commands = signalsByKind(scan, ["command", "risk"]);
 

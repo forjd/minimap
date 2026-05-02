@@ -17,6 +17,7 @@ const dangerousPattern =
 
 export function classifyCommand(name: string, value: string): CommandCategory {
   const normalizedName = name.toLowerCase();
+  const normalizedValue = value.toLowerCase();
   const haystack = `${name} ${value}`.toLowerCase();
 
   if (dangerousPattern.test(haystack)) return "dangerous";
@@ -27,7 +28,14 @@ export function classifyCommand(name: string, value: string): CommandCategory {
   if (/\b(format|pint)\b/.test(normalizedName)) return "format";
   if (/^test(:|$)/.test(normalizedName)) return "test";
   if (/\b(install|ci)\b/.test(haystack)) return "install";
-  if (/\b(dev|serve|watch|start|sail up)\b/.test(haystack)) return "dev";
+  if (
+    /\b(dev|serve|watch|start)\b/.test(normalizedName) ||
+    /\b(next dev|webpack serve|sail up)\b/.test(normalizedValue) ||
+    normalizedValue === "vite" ||
+    normalizedValue.startsWith("vite --")
+  ) {
+    return "dev";
+  }
   if (/\b(preview)\b/.test(haystack)) return "preview";
   if (/\b(e2e|playwright|cypress)\b/.test(haystack)) return "e2e";
   if (
@@ -48,9 +56,10 @@ export function commandSignalName(
   ecosystem: "node" | "php",
   scriptName: string,
   command: string,
+  nodeDomain: "frontend" | "cli" | "node" = "frontend",
 ): string {
   const category = classifyCommand(scriptName, command);
-  const prefix = ecosystem === "node" ? "frontend" : "php";
+  const prefix = ecosystem === "node" ? nodeDomain : "php";
 
   if (category === "unknown")
     return `${prefix}_${scriptName.replaceAll(/[^a-z0-9]+/gi, "_").toLowerCase()}`;

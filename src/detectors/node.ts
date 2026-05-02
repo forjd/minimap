@@ -4,6 +4,8 @@ import { commandSignalName, classifyCommand, isUsefulCommand } from "../core/com
 import type { Confidence, Detector, RepoSignal } from "../core/signals";
 
 const packageJsonSchema = z.object({
+  bin: z.union([z.string(), z.record(z.string(), z.string())]).optional(),
+  keywords: z.array(z.string()).optional(),
   type: z.string().optional(),
   scripts: z.record(z.string(), z.string()).optional(),
   dependencies: z.record(z.string(), z.string()).optional(),
@@ -24,6 +26,41 @@ function scriptRunner(files: { exists(path: string): boolean }): string {
   return "npm run";
 }
 
+function hasBin(pkg: PackageJson): boolean {
+  if (typeof pkg.bin === "string") return pkg.bin.trim().length > 0;
+  return Object.keys(pkg.bin ?? {}).length > 0;
+}
+
+function cliEvidence(pkg: PackageJson): { confidence: Confidence; evidence: string } | null {
+  if (hasBin(pkg)) {
+    return { confidence: "high", evidence: "bin field present" };
+  }
+
+  const keywords = new Set((pkg.keywords ?? []).map((keyword) => keyword.toLowerCase()));
+  if (keywords.has("cli") || keywords.has("command-line") || keywords.has("terminal")) {
+    return { confidence: "medium", evidence: "CLI keyword present" };
+  }
+
+  return null;
+}
+
+function isFrontendProject(
+  deps: Record<string, string>,
+  files: { exists(path: string): boolean },
+): boolean {
+  return Boolean(
+    deps.vue ||
+    deps.react ||
+    deps.next ||
+    deps.nuxt ||
+    deps.svelte ||
+    deps["@sveltejs/kit"] ||
+    deps.vite ||
+    files.exists("vite.config.ts") ||
+    files.exists("vite.config.js"),
+  );
+}
+
 export const detectNode: Detector = async ({ files }) => {
   const rawPkg = await files.readJson<unknown>("package.json");
   const parsedPkg = packageJsonSchema.safeParse(rawPkg);
@@ -40,6 +77,8 @@ export const detectNode: Detector = async ({ files }) => {
   });
 
   const deps = depsOf(pkg);
+  const cli = cliEvidence(pkg);
+  const nodeDomain = isFrontendProject(deps, files) ? "frontend" : cli ? "cli" : "node";
   if (deps.typescript) {
     signals.push({
       kind: "language",
@@ -57,6 +96,16 @@ export const detectNode: Detector = async ({ files }) => {
       confidence: "high",
       source: "package.json",
       evidence: 'type is "module"',
+    });
+  }
+
+  if (cli) {
+    signals.push({
+      kind: "architecture",
+      name: "CLI application",
+      confidence: cli.confidence,
+      source: "package.json",
+      evidence: cli.evidence,
     });
   }
 
@@ -105,7 +154,7 @@ export const detectNode: Detector = async ({ files }) => {
     const category = classifyCommand(name, value);
     signals.push({
       kind: category === "dangerous" ? "risk" : "command",
-      name: commandSignalName("node", name, value),
+      name: commandSignalName("node", name, value, nodeDomain),
       confidence: category === "dangerous" ? "high" : "medium",
       source: "package.json",
       evidence: `script "${name}": ${value}`,

@@ -40,6 +40,24 @@ describe("scanRepo", () => {
     );
   });
 
+  test("detects Node CLI applications", async () => {
+    const scan = await scanRepo(fixture("node-cli"));
+    expect(scan.signals).toContainEqual(
+      expect.objectContaining({
+        kind: "architecture",
+        name: "CLI application",
+        confidence: "high",
+      }),
+    );
+    expect(scan.signals).toContainEqual(
+      expect.objectContaining({
+        kind: "command",
+        name: "cli_dev",
+        metadata: expect.objectContaining({ value: "npm run dev" }),
+      }),
+    );
+  });
+
   test("extracts composer scripts", async () => {
     const scan = await scanRepo(fixture("laravel-vue-inertia"));
     expect(scan.signals).toContainEqual(
@@ -64,6 +82,9 @@ describe("classifyCommand", () => {
     expect(classifyCommand("typecheck", "tsc --noEmit")).toBe("typecheck");
     expect(classifyCommand("deploy", "npm publish")).toBe("dangerous");
     expect(classifyCommand("setup", "php artisan migrate --force")).toBe("dangerous");
+    expect(classifyCommand("prepare", "command -v husky >/dev/null 2>&1 && husky || true")).toBe(
+      "unknown",
+    );
     expect(classifyCommand("format", "biome format --write .")).toBe("format");
     expect(classifyCommand("lint", "rector && pint --parallel")).toBe("lint");
     expect(classifyCommand("test:lint", "pint --parallel --test")).toBe("lint");
