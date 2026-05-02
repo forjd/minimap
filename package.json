@@ -10,9 +10,11 @@
   "module": "src/cli.ts",
   "scripts": {
     "dev": "bun run src/cli.ts",
+    "prepare": "husky",
     "test": "bun test",
     "lint": "oxlint .",
     "format": "oxfmt .",
+    "format:check": "oxfmt --check .",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

@@ -63,5 +63,9 @@ describe("classifyCommand", () => {
     expect(classifyCommand("test", "vitest")).toBe("test");
     expect(classifyCommand("typecheck", "tsc --noEmit")).toBe("typecheck");
     expect(classifyCommand("deploy", "npm publish")).toBe("dangerous");
+    expect(classifyCommand("setup", "php artisan migrate --force")).toBe("dangerous");
+    expect(classifyCommand("format", "biome format --write .")).toBe("format");
+    expect(classifyCommand("lint", "rector && pint --parallel")).toBe("lint");
+    expect(classifyCommand("test:lint", "pint --parallel --test")).toBe("lint");
   });
 });

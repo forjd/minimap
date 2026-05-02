@@ -13,12 +13,19 @@ export type CommandCategory =
   | "unknown";
 
 const dangerousPattern =
-  /\b(migrate:fresh|migrate:reset|db:wipe|publish|deploy|terraform apply|rm -rf|docker compose down -v|docker-compose down -v|seed)\b/i;
+  /\b(migrate:fresh|migrate:reset|migrate\s+--force|db:wipe|publish|deploy|terraform apply|rm -rf|docker compose down -v|docker-compose down -v|seed)\b/i;
 
 export function classifyCommand(name: string, value: string): CommandCategory {
+  const normalizedName = name.toLowerCase();
   const haystack = `${name} ${value}`.toLowerCase();
 
   if (dangerousPattern.test(haystack)) return "dangerous";
+  if (/\b(e2e)\b/.test(normalizedName)) return "e2e";
+  if (/\b(typecheck|type-check|types|stan|analyse|analyze)\b/.test(normalizedName))
+    return "typecheck";
+  if (/\b(lint|check)\b/.test(normalizedName)) return "lint";
+  if (/\b(format|pint)\b/.test(normalizedName)) return "format";
+  if (/^test(:|$)/.test(normalizedName)) return "test";
   if (/\b(install|ci)\b/.test(haystack)) return "install";
   if (/\b(dev|serve|watch|start|sail up)\b/.test(haystack)) return "dev";
   if (/\b(preview)\b/.test(haystack)) return "preview";
@@ -28,9 +35,9 @@ export function classifyCommand(name: string, value: string): CommandCategory {
   ) {
     return "typecheck";
   }
+  if (/\b(format|prettier|biome format|pint)\b/.test(haystack)) return "format";
   if (/\b(lint|eslint|oxlint|biome|pint --test)\b/.test(haystack)) return "lint";
   if (/\b(test|vitest|jest|pest|phpunit)\b/.test(haystack)) return "test";
-  if (/\b(format|prettier|pint)\b/.test(haystack)) return "format";
   if (/\b(build|vite build|next build)\b/.test(haystack)) return "build";
   if (/\b(deploy)\b/.test(haystack)) return "deploy";
 

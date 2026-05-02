@@ -1,0 +1,25 @@
+#!/bin/sh
+
+message_file="$1"
+subject="$(sed -n '1p' "$message_file")"
+
+case "$subject" in
+  Merge\ *|Revert\ *) exit 0 ;;
+esac
+
+if printf '%s\n' "$subject" | grep -Eq '^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\([A-Za-z0-9._/-]+\))?!?: .{1,}$'; then
+  exit 0
+fi
+
+cat >&2 <<'EOF'
+Invalid commit message.
+
+Use Conventional Commits:
+  feat: add repository scanner
+  fix(cli): handle missing target file
+  docs!: document breaking change
+
+Allowed types: build, chore, ci, docs, feat, fix, perf, refactor, revert, style, test
+EOF
+
+exit 1
