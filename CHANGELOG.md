@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/forjd/minimap/compare/v1.1.0...v1.1.1) (2026-05-02)
+
+
+### Bug Fixes
+
+* trigger release for binary artifacts ([8c8cef0](https://github.com/forjd/minimap/commit/8c8cef09b18ff87b27359ef95316e90328965553))
+
 ## [1.1.0](https://github.com/forjd/minimap/compare/v1.0.2...v1.1.0) (2026-05-02)
 
 
