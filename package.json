@@ -1,6 +1,6 @@
 {
   "name": "@forjd/minimap",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Deterministic repository context compiler for coding agents.",
   "keywords": [
     "agents",
