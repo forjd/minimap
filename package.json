@@ -1,16 +1,38 @@
 {
   "name": "minimap",
   "version": "0.1.0",
-  "private": true,
   "description": "Deterministic repository context compiler for coding agents.",
+  "keywords": [
+    "agents",
+    "ai",
+    "bun",
+    "cli",
+    "context",
+    "repository"
+  ],
+  "homepage": "https://github.com/forjd/minimap#readme",
+  "bugs": {
+    "url": "https://github.com/forjd/minimap/issues"
+  },
+  "license": "MIT",
+  "author": "Forjd",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/forjd/minimap.git"
+  },
   "bin": {
     "minimap": "./src/cli.ts"
   },
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
   "type": "module",
   "module": "src/cli.ts",
   "scripts": {
     "dev": "bun run src/cli.ts",
-    "prepare": "husky",
+    "prepare": "command -v husky >/dev/null 2>&1 && husky || true",
     "test": "bun test",
     "lint": "oxlint .",
     "format": "oxfmt .",

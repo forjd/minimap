@@ -8,11 +8,15 @@ It is intentionally not a README generator. Minimap produces compact, determinis
 
 ## Install
 
+From source:
+
 ```bash
+git clone https://github.com/forjd/minimap.git
+cd minimap
 bun install
 ```
 
-Run locally:
+Run without linking:
 
 ```bash
 bun run src/cli.ts --help
@@ -24,6 +28,8 @@ Link the binary during development:
 bun link
 minimap --help
 ```
+
+When Minimap is published to a package registry, it will be usable through the package runner for that registry. Until then, source checkout is the supported install path.
 
 ## Commands
 
@@ -109,3 +115,19 @@ bun run format
 ```
 
 The test suite uses fixture repositories and snapshots for generated output.
+
+## Project Status
+
+Minimap is an MVP. It supports a focused set of Node, TypeScript, PHP, Laravel, and frontend ecosystem signals. It does not deeply parse source code, execute project commands, call external services, or use an LLM.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Security
+
+See [SECURITY.md](SECURITY.md).
+
+## License
+
+MIT, copyright Forjd.
