@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.2](https://github.com/forjd/minimap/compare/v1.2.1...v1.2.2) (2026-05-02)
+
+
+### Bug Fixes
+
+* cap rendered workspace entries ([6809c71](https://github.com/forjd/minimap/commit/6809c71e743288600068370bc73074aa7cf1c15f)), closes [#8](https://github.com/forjd/minimap/issues/8)
+
 ## [1.2.1](https://github.com/forjd/minimap/compare/v1.2.0...v1.2.1) (2026-05-02)
 
 
