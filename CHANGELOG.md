@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/forjd/minimap/compare/v1.0.0...v1.0.1) (2026-05-02)
+
+
+### Bug Fixes
+
+* normalize npm binary path ([599c382](https://github.com/forjd/minimap/commit/599c382bbc2e2a9f897fb5293c0a9df1cb2cb098))
+
 ## 1.0.0 (2026-05-02)
 
 
