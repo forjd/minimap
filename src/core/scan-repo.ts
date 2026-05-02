@@ -3,6 +3,7 @@ import { resolve } from "node:path";
 import { detectCi } from "../detectors/ci";
 import { detectApple } from "../detectors/apple";
 import { detectDeployment } from "../detectors/deployment";
+import { detectDocs } from "../detectors/docs";
 import {
   detectDotNet,
   detectGo,
@@ -36,6 +37,7 @@ const detectors: Detector[] = [
   detectTesting,
   detectInfrastructure,
   detectDeployment,
+  detectDocs,
   detectCi,
 ];
 

@@ -125,6 +125,20 @@ describe("scanRepo", () => {
     expect(scan.signals).toContainEqual(expect.objectContaining({ kind: "tool", name: "Make" }));
     expect(scan.warnings).toEqual([]);
   });
+
+  test("detects documentation, Codex skills, and plugins", async () => {
+    const scan = await scanRepo(fixture("docs-skill-plugin"));
+    expect(scan.signals).toContainEqual(
+      expect.objectContaining({ kind: "language", name: "Markdown" }),
+    );
+    expect(scan.signals).toContainEqual(
+      expect.objectContaining({ kind: "architecture", name: "Codex skill" }),
+    );
+    expect(scan.signals).toContainEqual(
+      expect.objectContaining({ kind: "architecture", name: "Codex plugin" }),
+    );
+    expect(scan.warnings).toEqual([]);
+  });
 });
 
 describe("classifyCommand", () => {
