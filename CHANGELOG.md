@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.2.1](https://github.com/forjd/minimap/compare/v1.2.0...v1.2.1) (2026-05-02)
+
+
+### Bug Fixes
+
+* confine cli reads and writes to repo ([7227386](https://github.com/forjd/minimap/commit/7227386a517b355c063f6e539a852eb5bf937073))
+
+
+### Performance Improvements
+
+* speed up cli scanning ([0509749](https://github.com/forjd/minimap/commit/05097499a240aef1973899ef70506bd19f38e413))
+
 ## [1.2.0](https://github.com/forjd/minimap/compare/v1.1.1...v1.2.0) (2026-05-02)
 
 
