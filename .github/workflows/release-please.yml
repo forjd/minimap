@@ -57,9 +57,9 @@ jobs:
         if: ${{ steps.release.outputs.release_created == 'true' || github.event_name == 'workflow_dispatch' }}
         run: bun run typecheck
 
-      - name: Test
+      - name: Test with coverage
         if: ${{ steps.release.outputs.release_created == 'true' || github.event_name == 'workflow_dispatch' }}
-        run: bun test
+        run: bun run coverage
 
       - name: Publish to npm
         if: ${{ steps.release.outputs.release_created == 'true' || github.event_name == 'workflow_dispatch' }}

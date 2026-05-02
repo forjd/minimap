@@ -35,6 +35,7 @@
     "dev": "bun run src/cli.ts",
     "prepare": "command -v husky >/dev/null 2>&1 && husky || true",
     "test": "bun test",
+    "coverage": "bun test --coverage",
     "lint": "oxlint .",
     "format": "oxfmt .",
     "format:check": "oxfmt --check .",
