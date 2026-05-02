@@ -3,6 +3,7 @@
 - Do not manually edit content inside the Minimap managed block below. Refresh it with `bun run src/cli.ts write --target AGENTS.md`.
 - Use Bun for local development and validation.
 - Use Conventional Commits for commit messages.
+- Use rebase merges for GitHub pull requests; squash and merge commits are disabled for this repository.
 - Before handing off code changes, run the relevant checks from the managed command list. For broad changes, prefer `bun run format:check`, `bun run lint`, `bun run typecheck`, and `bun test`.
 - Keep Minimap deterministic, local-only by default, and conservative about file reads and writes.
 
