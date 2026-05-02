@@ -1,0 +1,47 @@
+name: Release Binaries Dry Run
+
+env:
+  BUN_VERSION: 1.3.13
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Release Binaries
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Check formatting
+        run: bun run format:check
+
+      - name: Lint
+        run: bun run lint
+
+      - name: Typecheck
+        run: bun run typecheck
+
+      - name: Test with coverage
+        run: bun run coverage
+
+      - name: Build release binaries
+        run: bash scripts/build-release-assets.sh
+
+      - name: Upload release binary artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: minimap-release-assets
+          path: dist/release/assets/*
+          if-no-files-found: error
+          retention-days: 7

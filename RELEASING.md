@@ -14,6 +14,7 @@ Minimap uses Release Please for versioning, changelog generation, GitHub release
 ## Standalone Binaries
 
 The release workflow builds optional standalone binaries with Bun `build --compile`.
+Run the `Release Binaries Dry Run` workflow manually to test the same build script without publishing to npm or uploading GitHub release assets.
 
 Published targets:
 
