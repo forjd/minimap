@@ -74,6 +74,38 @@ describe("scanRepo", () => {
     const b = await scanRepo(fixture("node-vite-vue"));
     expect(a.signals).toEqual(b.signals);
   });
+
+  test("detects additional ecosystems and infrastructure", async () => {
+    const scan = await scanRepo(fixture("expanded-ecosystems"));
+    const expectedSignals = [
+      { kind: "language", name: "Python" },
+      { kind: "language", name: "Rust" },
+      { kind: "language", name: "Go" },
+      { kind: "language", name: "Ruby" },
+      { kind: "language", name: "Java" },
+      { kind: "language", name: "C#" },
+      { kind: "framework", name: "FastAPI" },
+      { kind: "framework", name: "Axum" },
+      { kind: "framework", name: "Gin" },
+      { kind: "framework", name: "Ruby on Rails" },
+      { kind: "framework", name: "Spring Boot" },
+      { kind: "framework", name: "ASP.NET Core" },
+      { kind: "tool", name: "Docker" },
+      { kind: "tool", name: "Docker Compose" },
+      { kind: "tool", name: "Cloudflare Workers" },
+      { kind: "tool", name: "Kubernetes" },
+      { kind: "package-manager", name: "uv" },
+      { kind: "package-manager", name: "Cargo" },
+      { kind: "package-manager", name: "Go modules" },
+      { kind: "package-manager", name: "Bundler" },
+      { kind: "package-manager", name: "Maven" },
+      { kind: "package-manager", name: ".NET SDK" },
+    ];
+
+    for (const expected of expectedSignals) {
+      expect(scan.signals).toContainEqual(expect.objectContaining(expected));
+    }
+  });
 });
 
 describe("classifyCommand", () => {

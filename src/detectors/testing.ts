@@ -3,6 +3,7 @@ import { z } from "zod";
 import type { Detector, RepoSignal } from "../core/signals";
 
 const packageJsonSchema = z.object({
+  scripts: z.record(z.string(), z.string()).optional(),
   dependencies: z.record(z.string(), z.string()).optional(),
   devDependencies: z.record(z.string(), z.string()).optional(),
   peerDependencies: z.record(z.string(), z.string()).optional(),
@@ -24,9 +25,14 @@ export const detectTesting: Detector = async ({ files }) => {
   const testFrameworks: Array<[string, string]> = [
     ["vitest", "Vitest"],
     ["jest", "Jest"],
+    ["mocha", "Mocha"],
+    ["ava", "Ava"],
     ["playwright", "Playwright"],
     ["@playwright/test", "Playwright"],
     ["cypress", "Cypress"],
+    ["@testing-library/react", "Testing Library"],
+    ["@testing-library/vue", "Testing Library"],
+    ["@testing-library/svelte", "Testing Library"],
   ];
 
   for (const [dependency, name] of testFrameworks) {
@@ -58,6 +64,16 @@ export const detectTesting: Detector = async ({ files }) => {
       confidence: "medium",
       source: "pest.php",
       evidence: "pest.php present",
+    });
+  }
+
+  if (Object.values(pkg?.scripts ?? {}).some((script) => /\bbun\s+test\b/.test(script))) {
+    signals.push({
+      kind: "test-framework",
+      name: "Bun test",
+      confidence: "medium",
+      source: "package.json",
+      evidence: "bun test script detected",
     });
   }
 

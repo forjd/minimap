@@ -1,7 +1,17 @@
 import { resolve } from "node:path";
 
 import { detectCi } from "../detectors/ci";
+import { detectDeployment } from "../detectors/deployment";
+import {
+  detectDotNet,
+  detectGo,
+  detectJava,
+  detectPython,
+  detectRuby,
+  detectRust,
+} from "../detectors/ecosystems";
 import { detectFrontend } from "../detectors/frontend";
+import { detectInfrastructure } from "../detectors/infrastructure";
 import { detectLaravel } from "../detectors/laravel";
 import { detectNode } from "../detectors/node";
 import { detectPhp } from "../detectors/php";
@@ -14,8 +24,16 @@ const detectors: Detector[] = [
   detectNode,
   detectPhp,
   detectLaravel,
+  detectPython,
+  detectRust,
+  detectGo,
+  detectRuby,
+  detectJava,
+  detectDotNet,
   detectFrontend,
   detectTesting,
+  detectInfrastructure,
+  detectDeployment,
   detectCi,
 ];
 
@@ -30,9 +48,22 @@ export async function scanRepo(cwd = process.cwd()): Promise<RepoScan> {
     signals.push(...(await detector({ cwd: resolvedCwd, files, warnings })));
   }
 
-  if (!files.exists("package.json") && !files.exists("composer.json")) {
+  if (
+    signals.length === 0 &&
+    !files.exists("package.json") &&
+    !files.exists("composer.json") &&
+    !files.exists("pyproject.toml") &&
+    !files.exists("requirements.txt") &&
+    !files.exists("Cargo.toml") &&
+    !files.exists("go.mod") &&
+    !files.exists("Gemfile") &&
+    !files.exists("pom.xml") &&
+    !files.exists("build.gradle") &&
+    !files.exists("build.gradle.kts") &&
+    (await files.listFiles(["*.csproj", "*.fsproj", "*.sln"])).length === 0
+  ) {
     warnings.push(
-      "No supported project files found. Expected one of: package.json, composer.json.",
+      "No supported project files found. Expected a supported language or package manifest.",
     );
   }
 
