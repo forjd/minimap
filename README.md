@@ -85,6 +85,12 @@ bun install -g @forjd/minimap
 minimap --help
 ```
 
+Prefer shorthand?
+
+```bash
+bun i -g @forjd/minimap
+```
+
 You can also run it with npm:
 
 ```bash
@@ -111,6 +117,8 @@ minimap scan
 minimap scan --pretty
 minimap scan --cwd ./some-project
 ```
+
+`scan` is read-only. To preview generated context, use `generate` or `write --dry-run`.
 
 ### Generate
 

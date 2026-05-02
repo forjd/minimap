@@ -6,11 +6,12 @@ import { createGenerateCommand } from "./commands/generate";
 import { createScanCommand } from "./commands/scan";
 import { createWriteCommand } from "./commands/write";
 import { runCommand } from "./utils/errors";
+import packageJson from "../package.json";
 
 const program = new Command()
   .name("minimap")
   .description("Compile high-signal repository context for coding agents.")
-  .version("0.1.0");
+  .version(packageJson.version);
 
 program.addCommand(createScanCommand());
 program.addCommand(createGenerateCommand());
