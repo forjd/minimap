@@ -3,6 +3,8 @@ import { xmlAttribute, xmlText } from "./xml";
 
 export const startMarker = "<!-- minimap:start -->";
 export const endMarker = "<!-- minimap:end -->";
+const maxRenderedWorkspaces = 40;
+const maxWorkspaceSummaryGroups = 8;
 
 function hasSignal(scan: RepoScan, name: string): boolean {
   return scan.signals.some((signal) => signal.name === name);
@@ -142,17 +144,85 @@ function renderPackageManagers(signals: RepoSignal[]): string[] {
 function renderWorkspaces(signals: RepoSignal[]): string[] {
   signals = dedupeSignalsByKindAndName(signals);
   if (signals.length === 0) return [];
+  const rendered = signals.slice(0, maxRenderedWorkspaces);
+  const omitted = signals.slice(maxRenderedWorkspaces);
+  const allSummaryGroups = workspaceSummaryGroups(omitted);
+  const summaryGroups = allSummaryGroups.slice(0, maxWorkspaceSummaryGroups);
+  const remainingGroupCount = Math.max(0, allSummaryGroups.length - summaryGroups.length);
+
   return [
     "  <workspaces>",
-    ...signals.map((signal) => {
+    ...rendered.map((signal) => {
       const path = String(signal.metadata?.path ?? signal.name);
       const manager = signal.metadata?.manager
         ? ` manager="${xmlAttribute(String(signal.metadata.manager))}"`
         : "";
       return `    <workspace path="${xmlAttribute(path)}" confidence="${signal.confidence}" source="${xmlAttribute(signal.source)}"${manager} evidence="${xmlAttribute(signal.evidence)}" />`;
     }),
+    ...renderWorkspaceOverflow(
+      signals.length,
+      rendered.length,
+      omitted.length,
+      summaryGroups,
+      remainingGroupCount,
+    ),
     "  </workspaces>",
     "",
+  ];
+}
+
+function workspaceSummaryGroups(signals: RepoSignal[]): Array<{
+  count: number;
+  source: string;
+  manager: string | null;
+  pattern: string | null;
+}> {
+  const groups = new Map<
+    string,
+    { count: number; source: string; manager: string | null; pattern: string | null }
+  >();
+
+  for (const signal of signals) {
+    const manager = signal.metadata?.manager === undefined ? null : String(signal.metadata.manager);
+    const pattern = signal.metadata?.pattern === undefined ? null : String(signal.metadata.pattern);
+    const key = JSON.stringify([signal.source, manager, pattern]);
+    const group = groups.get(key);
+    if (group) {
+      group.count += 1;
+      continue;
+    }
+    groups.set(key, { count: 1, source: signal.source, manager, pattern });
+  }
+
+  return [...groups.values()].sort(
+    (a, b) =>
+      b.count - a.count ||
+      a.source.localeCompare(b.source) ||
+      (a.manager ?? "").localeCompare(b.manager ?? "") ||
+      (a.pattern ?? "").localeCompare(b.pattern ?? ""),
+  );
+}
+
+function renderWorkspaceOverflow(
+  total: number,
+  rendered: number,
+  omitted: number,
+  groups: ReturnType<typeof workspaceSummaryGroups>,
+  remainingGroupCount: number,
+): string[] {
+  if (omitted === 0) return [];
+
+  return [
+    `    <workspace_overflow total="${total}" rendered="${rendered}" omitted="${omitted}">`,
+    ...groups.map((group) => {
+      const manager = group.manager ? ` manager="${xmlAttribute(group.manager)}"` : "";
+      const pattern = group.pattern ? ` pattern="${xmlAttribute(group.pattern)}"` : "";
+      return `      <workspace_group count="${group.count}" source="${xmlAttribute(group.source)}"${manager}${pattern} />`;
+    }),
+    ...(remainingGroupCount > 0
+      ? [`      <workspace_group_overflow omitted_groups="${remainingGroupCount}" />`]
+      : []),
+    "    </workspace_overflow>",
   ];
 }
 

@@ -2,6 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { join } from "node:path";
 
 import { scanRepo } from "../src/core/scan-repo";
+import type { RepoScan, RepoSignal } from "../src/core/signals";
 import { renderAgentContext } from "../src/renderers/render-agent-context";
 
 const fixture = (name: string) => join(import.meta.dir, "fixtures", name);
@@ -39,5 +40,40 @@ describe("renderAgentContext", () => {
     expect(context).toContain(
       '<workspace path="packages/ui" confidence="high" source="pnpm-workspace.yaml" manager="pnpm" evidence="pnpm-workspace.yaml present" />',
     );
+  });
+
+  test("caps rendered workspace entries for large monorepos", () => {
+    const workspaceSignals: RepoSignal[] = Array.from({ length: 45 }, (_, index) => {
+      const path = `packages/pkg-${String(index + 1).padStart(2, "0")}`;
+      return {
+        kind: "workspace",
+        name: path,
+        confidence: "high",
+        source: "pnpm-workspace.yaml",
+        evidence: "pnpm-workspace.yaml present",
+        metadata: {
+          path,
+          manager: "pnpm",
+          pattern: "packages/*",
+        },
+      };
+    });
+    const scan: RepoScan = {
+      cwd: "/tmp/minimap-large-monorepo",
+      generatedAt: "2026-05-02T00:00:00.000Z",
+      filesRead: [],
+      warnings: [],
+      signals: workspaceSignals,
+    };
+
+    const context = renderAgentContext(scan);
+
+    expect(context.match(/<workspace path=/g)?.length).toBe(40);
+    expect(context).toContain('<workspace_overflow total="45" rendered="40" omitted="5">');
+    expect(context).toContain(
+      '<workspace_group count="5" source="pnpm-workspace.yaml" manager="pnpm" pattern="packages/*" />',
+    );
+    expect(context).toContain('<workspace path="packages/pkg-40"');
+    expect(context).not.toContain('<workspace path="packages/pkg-41"');
   });
 });
