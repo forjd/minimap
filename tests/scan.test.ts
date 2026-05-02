@@ -106,6 +106,19 @@ describe("scanRepo", () => {
       expect(scan.signals).toContainEqual(expect.objectContaining(expected));
     }
   });
+
+  test("detects Swift packages and SwiftUI", async () => {
+    const scan = await scanRepo(fixture("swift-package"));
+    expect(scan.signals).toContainEqual(
+      expect.objectContaining({ kind: "language", name: "Swift" }),
+    );
+    expect(scan.signals).toContainEqual(
+      expect.objectContaining({ kind: "package-manager", name: "SwiftPM" }),
+    );
+    expect(scan.signals).toContainEqual(
+      expect.objectContaining({ kind: "framework", name: "SwiftUI" }),
+    );
+  });
 });
 
 describe("classifyCommand", () => {

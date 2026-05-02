@@ -1,6 +1,7 @@
 import { resolve } from "node:path";
 
 import { detectCi } from "../detectors/ci";
+import { detectApple } from "../detectors/apple";
 import { detectDeployment } from "../detectors/deployment";
 import {
   detectDotNet,
@@ -30,6 +31,7 @@ const detectors: Detector[] = [
   detectRuby,
   detectJava,
   detectDotNet,
+  detectApple,
   detectFrontend,
   detectTesting,
   detectInfrastructure,
@@ -60,6 +62,7 @@ export async function scanRepo(cwd = process.cwd()): Promise<RepoScan> {
     !files.exists("pom.xml") &&
     !files.exists("build.gradle") &&
     !files.exists("build.gradle.kts") &&
+    !files.exists("Package.swift") &&
     (await files.listFiles(["*.csproj", "*.fsproj", "*.sln"])).length === 0
   ) {
     warnings.push(
