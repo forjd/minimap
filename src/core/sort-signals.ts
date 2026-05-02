@@ -7,6 +7,7 @@ const kindOrder = new Map(
     "tool",
     "test-framework",
     "package-manager",
+    "workspace",
     "command",
     "architecture",
     "convention",

@@ -251,6 +251,8 @@ MVP detection covers:
 - Vitest, Jest, Playwright, Cypress, Pest, PHPUnit
 - ESLint, oxlint, Biome, Pint, PHPStan, Larastan
 - shallow GitHub Actions workflow presence and names
+- pnpm, npm, Yarn, and Bun workspace package manifests
+- Turborepo, Nx, and Lerna monorepo configuration files
 
 ## Good For
 
@@ -268,7 +270,7 @@ Current limitations:
 
 - Bun is the supported runtime.
 - Node-compatible bundling is not a goal yet.
-- Monorepo support is shallow.
+- Monorepo support detects root workspace configuration and package manifests, but does not deeply scan each package yet.
 - Staleness checks compare the generated managed block exactly.
 - The scanner intentionally avoids deep source parsing.
 

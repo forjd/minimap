@@ -3,6 +3,7 @@ export type SignalKind =
   | "framework"
   | "tool"
   | "package-manager"
+  | "workspace"
   | "command"
   | "test-framework"
   | "architecture"

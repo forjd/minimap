@@ -51,6 +51,7 @@ function summarize(scan: RepoScan): string {
   }
   if (hasSignal(scan, "PHP") && !parts.includes("Laravel")) parts.push("PHP");
   const isCliApp = hasSignal(scan, "CLI application");
+  if (hasSignal(scan, "Monorepo")) parts.push("Monorepo");
   if (hasSignal(scan, "TypeScript")) parts.push(isCliApp ? "TypeScript CLI" : "TypeScript");
   else if (hasSignal(scan, "JavaScript")) parts.push(isCliApp ? "JavaScript CLI" : "JavaScript");
   for (const language of [
@@ -93,6 +94,9 @@ function summarize(scan: RepoScan): string {
     "Poetry",
     ".NET SDK",
     "CMake",
+    "Turborepo",
+    "Nx",
+    "Lerna",
   ].filter((name) => hasSignal(scan, name));
 
   if (parts.length === 0) return "Repository context inferred from supported project manifests.";
@@ -131,6 +135,23 @@ function renderPackageManagers(signals: RepoSignal[]): string[] {
         `    <manager name="${xmlAttribute(signal.name)}" confidence="${signal.confidence}" evidence="${xmlAttribute(signal.evidence)}" />`,
     ),
     "  </package_managers>",
+    "",
+  ];
+}
+
+function renderWorkspaces(signals: RepoSignal[]): string[] {
+  signals = dedupeSignalsByKindAndName(signals);
+  if (signals.length === 0) return [];
+  return [
+    "  <workspaces>",
+    ...signals.map((signal) => {
+      const path = String(signal.metadata?.path ?? signal.name);
+      const manager = signal.metadata?.manager
+        ? ` manager="${xmlAttribute(String(signal.metadata.manager))}"`
+        : "";
+      return `    <workspace path="${xmlAttribute(path)}" confidence="${signal.confidence}" source="${xmlAttribute(signal.source)}"${manager} evidence="${xmlAttribute(signal.evidence)}" />`;
+    }),
+    "  </workspaces>",
     "",
   ];
 }
@@ -185,6 +206,7 @@ function renderEvidence(scan: RepoScan): string[] {
   const seen = new Set<string>();
   const items = scan.signals
     .filter((signal) => signal.kind !== "command" && signal.kind !== "risk")
+    .filter((signal) => signal.kind !== "workspace")
     .map((signal) => ({
       source: signal.source,
       text: `Detected ${signal.name}: ${signal.evidence}.`,
@@ -227,6 +249,7 @@ export function renderAgentContext(scan: RepoScan): string {
     "architecture",
   ]);
   const packageManagers = signalsByKind(scan, ["package-manager"]);
+  const workspaces = signalsByKind(scan, ["workspace"]);
   const commands = signalsByKind(scan, ["command", "risk"]);
 
   const lines = [
@@ -238,6 +261,7 @@ export function renderAgentContext(scan: RepoScan): string {
     "",
     ...renderStack(stack),
     ...renderPackageManagers(packageManagers),
+    ...renderWorkspaces(workspaces),
     ...renderCommands(commands),
     ...renderProjectConventions(scan),
     ...renderEvidence(scan),

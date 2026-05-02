@@ -146,6 +146,30 @@ describe("scanRepo", () => {
     expect(scan.signals).toContainEqual(expect.objectContaining({ kind: "language", name: "C++" }));
     expect(scan.signals).toContainEqual(expect.objectContaining({ kind: "tool", name: "CMake" }));
   });
+
+  test("detects workspace package manifests", async () => {
+    const scan = await scanRepo(fixture("pnpm-monorepo"));
+    expect(scan.signals).toContainEqual(
+      expect.objectContaining({ kind: "architecture", name: "Monorepo" }),
+    );
+    expect(scan.signals).toContainEqual(
+      expect.objectContaining({ kind: "tool", name: "Turborepo" }),
+    );
+    expect(scan.signals).toContainEqual(
+      expect.objectContaining({
+        kind: "workspace",
+        name: "apps/web",
+        metadata: expect.objectContaining({ manager: "pnpm", path: "apps/web" }),
+      }),
+    );
+    expect(scan.signals).toContainEqual(
+      expect.objectContaining({
+        kind: "workspace",
+        name: "packages/ui",
+        metadata: expect.objectContaining({ manager: "pnpm", path: "packages/ui" }),
+      }),
+    );
+  });
 });
 
 describe("classifyCommand", () => {

@@ -10,14 +10,18 @@
 <!-- minimap:start -->
 <repo_context generated_by="minimap" schema_version="1">
   <summary>
-    TypeScript CLI project using Bun.
+    TypeScript CLI + Markdown project using Bun, Bun test.
   </summary>
 
   <stack>
     <language name="JavaScript" confidence="high" evidence="package.json present" />
+    <language name="Markdown" confidence="medium" evidence="6 Markdown files detected" />
     <language name="TypeScript" confidence="high" evidence="typescript dependency detected" />
+    <tool name="oxfmt" confidence="high" evidence="oxfmt dependency detected" />
     <tool name="oxlint" confidence="high" evidence="oxlint dependency detected" />
+    <test_framework name="Bun test" confidence="medium" evidence="bun test script detected" />
     <architecture name="CLI application" confidence="high" evidence="bin field present" />
+    <architecture name="Codex skill" confidence="high" evidence="SKILL.md present" />
   </stack>
 
   <package_managers>
@@ -40,10 +44,14 @@
 
   <evidence>
     <item source="package.json">Detected JavaScript: package.json present.</item>
+    <item source="README.md">Detected Markdown: 6 Markdown files detected.</item>
     <item source="package.json">Detected TypeScript: typescript dependency detected.</item>
+    <item source="package.json">Detected oxfmt: oxfmt dependency detected.</item>
     <item source="package.json">Detected oxlint: oxlint dependency detected.</item>
+    <item source="package.json">Detected Bun test: bun test script detected.</item>
     <item source="bun.lock">Detected Bun: bun.lock present.</item>
     <item source="package.json">Detected CLI application: bin field present.</item>
+    <item source="skills/minimap/SKILL.md">Detected Codex skill: SKILL.md present.</item>
     <item source="package.json">Detected ES modules: type is "module".</item>
   </evidence>
 

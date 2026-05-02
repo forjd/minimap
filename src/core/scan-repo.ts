@@ -19,6 +19,7 @@ import { detectLaravel } from "../detectors/laravel";
 import { detectNode } from "../detectors/node";
 import { detectPhp } from "../detectors/php";
 import { detectTesting } from "../detectors/testing";
+import { detectWorkspaces } from "../detectors/workspaces";
 import { createRepoFileMap } from "./file-reader";
 import type { Detector, RepoScan } from "./signals";
 import { sortSignals, uniqueSignals } from "./sort-signals";
@@ -37,6 +38,7 @@ const detectors: Detector[] = [
   detectC,
   detectFrontend,
   detectTesting,
+  detectWorkspaces,
   detectInfrastructure,
   detectDeployment,
   detectDocs,

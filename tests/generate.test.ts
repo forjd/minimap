@@ -28,4 +28,16 @@ describe("renderAgentContext", () => {
       "FastAPI + Ruby on Rails + Spring Boot + ASP.NET Core + Python + Rust + Go + Ruby + Java + C# project using Docker, Docker Compose, Cargo, Go modules, uv, .NET SDK.",
     );
   });
+
+  test("renders workspace package manifests", async () => {
+    const scan = await scanRepo(fixture("pnpm-monorepo"));
+    const context = renderAgentContext(scan);
+    expect(context).toContain("<workspaces>");
+    expect(context).toContain(
+      '<workspace path="apps/web" confidence="high" source="pnpm-workspace.yaml" manager="pnpm" evidence="pnpm-workspace.yaml present" />',
+    );
+    expect(context).toContain(
+      '<workspace path="packages/ui" confidence="high" source="pnpm-workspace.yaml" manager="pnpm" evidence="pnpm-workspace.yaml present" />',
+    );
+  });
 });
