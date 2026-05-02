@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "build": "vite build",
+    "deploy": "npm publish"
+  },
+  "devDependencies": {
+    "vite": "^7.0.0"
+  }
+}

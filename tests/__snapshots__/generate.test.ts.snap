@@ -1,0 +1,131 @@
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+exports[`renderAgentContext renders node vite vue snapshot 1`] = `
+"<!-- minimap:start -->
+<repo_context generated_by="minimap" schema_version="1">
+  <summary>
+    Vue + TypeScript project using npm, Vitest, Vite.
+  </summary>
+
+  <stack>
+    <language name="JavaScript" confidence="high" evidence="package.json present" />
+    <language name="TypeScript" confidence="high" evidence="typescript dependency detected" />
+    <framework name="Vue" confidence="high" evidence="vue dependency detected" />
+    <tool name="oxlint" confidence="high" evidence="oxlint dependency detected" />
+    <tool name="Vite" confidence="high" evidence="vite dependency detected" />
+    <tool name="Vite" confidence="medium" evidence="Vite config present" />
+    <test_framework name="Vitest" confidence="high" evidence="vitest dependency detected" />
+  </stack>
+
+  <package_managers>
+    <manager name="npm" confidence="high" evidence="package-lock.json present" />
+  </package_managers>
+
+  <commands>
+    <command name="frontend_build" value="npm run build" confidence="medium" category="build" />
+    <command name="frontend_dev" value="npm run dev" confidence="medium" category="dev" />
+    <command name="frontend_lint" value="npm run lint" confidence="medium" category="lint" />
+    <command name="test" value="npm run test" confidence="medium" category="test" />
+    <command name="typecheck" value="npm run typecheck" confidence="medium" category="typecheck" />
+  </commands>
+
+  <project_conventions>
+    <item>Use ES module syntax consistently with package.json type=module.</item>
+  </project_conventions>
+
+  <agent_guidance>
+    <rule>Inspect nearby files before introducing new patterns.</rule>
+    <rule>Prefer existing project conventions over generic framework defaults.</rule>
+    <rule>When changing behaviour, add or update tests where practical.</rule>
+  </agent_guidance>
+
+  <evidence>
+    <item source="package.json">Detected JavaScript: package.json present.</item>
+    <item source="package.json">Detected TypeScript: typescript dependency detected.</item>
+    <item source="package.json">Detected Vue: vue dependency detected.</item>
+    <item source="package.json">Detected oxlint: oxlint dependency detected.</item>
+    <item source="package.json">Detected Vite: vite dependency detected.</item>
+    <item source="vite.config.ts">Detected Vite: Vite config present.</item>
+    <item source="package.json">Detected Vitest: vitest dependency detected.</item>
+    <item source="package-lock.json">Detected npm: package-lock.json present.</item>
+    <item source="package.json">Detected ES modules: type is "module".</item>
+  </evidence>
+
+</repo_context>
+<!-- minimap:end -->
+"
+`;
+
+exports[`renderAgentContext renders laravel vue inertia snapshot 1`] = `
+"<!-- minimap:start -->
+<repo_context generated_by="minimap" schema_version="1">
+  <summary>
+    Laravel + Vue/Inertia + TypeScript project using Composer, npm, Pest, PHPUnit, Vite, Tailwind CSS.
+  </summary>
+
+  <stack>
+    <language name="JavaScript" confidence="high" evidence="package.json present" />
+    <language name="PHP" confidence="high" evidence="composer.json present" />
+    <language name="TypeScript" confidence="high" evidence="typescript dependency detected" />
+    <framework name="Laravel" confidence="high" evidence="laravel/framework dependency detected" />
+    <framework name="Vue" confidence="high" evidence="vue dependency detected" />
+    <tool name="Inertia" confidence="high" evidence="@inertiajs/vue3 dependency detected" />
+    <tool name="Inertia Laravel" confidence="high" evidence="inertiajs/inertia-laravel dependency detected" />
+    <tool name="Laravel Pint" confidence="high" evidence="laravel/pint dependency detected" />
+    <tool name="PHPStan" confidence="high" evidence="phpstan/phpstan dependency detected" />
+    <tool name="Tailwind CSS" confidence="high" evidence="tailwindcss dependency detected" />
+    <tool name="Vite" confidence="high" evidence="vite dependency detected" />
+    <test_framework name="Pest" confidence="high" evidence="pestphp/pest dependency detected" />
+    <test_framework name="PHPUnit" confidence="high" evidence="phpunit/phpunit dependency detected" />
+    <test_framework name="PHPUnit" confidence="medium" evidence="PHPUnit config present" />
+  </stack>
+
+  <package_managers>
+    <manager name="Composer" confidence="high" evidence="composer.json present" />
+    <manager name="npm" confidence="high" evidence="package-lock.json present" />
+  </package_managers>
+
+  <commands>
+    <command name="frontend_build" value="npm run build" confidence="medium" category="build" />
+    <command name="frontend_dev" value="npm run dev" confidence="medium" category="dev" />
+    <command name="php_lint" value="composer lint" confidence="medium" category="lint" />
+    <command name="php_static_analysis" value="composer analyse" confidence="medium" category="typecheck" />
+    <command name="php_tests" value="composer test" confidence="medium" category="test" />
+  </commands>
+
+  <project_conventions>
+    <item>Use Pest style for PHP tests unless nearby tests use PHPUnit style.</item>
+    <item>For frontend changes, inspect existing Inertia pages and Vue components before adding new patterns.</item>
+    <item>Use existing Tailwind conventions. Do not create a Tailwind config file unless the repo already has one.</item>
+  </project_conventions>
+
+  <agent_guidance>
+    <rule>Inspect nearby files before introducing new patterns.</rule>
+    <rule>Prefer existing project conventions over generic framework defaults.</rule>
+    <rule>When changing behaviour, add or update tests where practical.</rule>
+    <rule>Prefer existing Laravel conventions in this repository over generic patterns.</rule>
+    <rule>Use Form Requests for validation if the project already uses them.</rule>
+    <rule>Use Eloquent relationships and query scopes where consistent with nearby code.</rule>
+    <rule>Do not introduce a repository layer unless the repository already uses one.</rule>
+    <rule>Do not run destructive database, deployment, publishing, or volume deletion commands unless explicitly requested.</rule>
+  </agent_guidance>
+
+  <evidence>
+    <item source="package.json">Detected JavaScript: package.json present.</item>
+    <item source="composer.json">Detected PHP: composer.json present.</item>
+    <item source="package.json">Detected TypeScript: typescript dependency detected.</item>
+    <item source="composer.json">Detected Laravel: laravel/framework dependency detected.</item>
+    <item source="package.json">Detected Vue: vue dependency detected.</item>
+    <item source="package.json">Detected Inertia: @inertiajs/vue3 dependency detected.</item>
+    <item source="composer.json">Detected Inertia Laravel: inertiajs/inertia-laravel dependency detected.</item>
+    <item source="composer.json">Detected Laravel Pint: laravel/pint dependency detected.</item>
+    <item source="composer.json">Detected PHPStan: phpstan/phpstan dependency detected.</item>
+    <item source="package.json">Detected Tailwind CSS: tailwindcss dependency detected.</item>
+    <item source="package.json">Detected Vite: vite dependency detected.</item>
+    <item source="composer.json">Detected Pest: pestphp/pest dependency detected.</item>
+  </evidence>
+
+</repo_context>
+<!-- minimap:end -->
+"
+`;
