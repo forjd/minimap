@@ -4,9 +4,9 @@ const generatedContextFiles = new Set(["AGENTS.md", "CLAUDE.md", "GEMINI.md"]);
 
 export const detectDocs: Detector = async ({ files }) => {
   const skillFiles = await files.listFiles(["SKILL.md", "skills/**/SKILL.md"]);
-  const markdownFiles = (await files.listFiles(["*.md", "docs/**/*.md", "skills/**/*.md"])).filter(
-    (path) => !generatedContextFiles.has(path),
-  );
+  const markdownFiles = (
+    await files.listFiles(["*.md", "*/*.md", "docs/**/*.md", "skills/**/*.md"])
+  ).filter((path) => !generatedContextFiles.has(path));
   const hasPluginManifest = files.exists(".codex-plugin/plugin.json");
 
   if (skillFiles.length === 0 && markdownFiles.length === 0 && !hasPluginManifest) return [];

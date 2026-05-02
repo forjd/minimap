@@ -2,9 +2,19 @@ import type { Detector, RepoSignal } from "../core/signals";
 
 export const detectInfrastructure: Detector = async ({ files }) => {
   const signals: RepoSignal[] = [];
+  const dockerfiles = await files.listFiles(["Dockerfile", "*/Dockerfile"]);
+
+  if (dockerfiles.length > 0) {
+    signals.push({
+      kind: "tool",
+      name: "Docker",
+      confidence: "high",
+      source: dockerfiles[0] ?? "Dockerfile",
+      evidence: "Dockerfile present",
+    });
+  }
 
   const simpleTools: Array<[string, string, string]> = [
-    ["Dockerfile", "Docker", "Dockerfile present"],
     ["Makefile", "Make", "Makefile present"],
     ["justfile", "Just", "justfile present"],
     ["Taskfile.yml", "Task", "Taskfile.yml present"],
@@ -24,12 +34,18 @@ export const detectInfrastructure: Detector = async ({ files }) => {
     });
   }
 
-  const composeFile = [
-    "docker-compose.yml",
-    "docker-compose.yaml",
-    "compose.yml",
-    "compose.yaml",
-  ].find((path) => files.exists(path));
+  const composeFile =
+    ["docker-compose.yml", "docker-compose.yaml", "compose.yml", "compose.yaml"].find((path) =>
+      files.exists(path),
+    ) ??
+    (
+      await files.listFiles([
+        "*/docker-compose.yml",
+        "*/docker-compose.yaml",
+        "*/compose.yml",
+        "*/compose.yaml",
+      ])
+    )[0];
   if (composeFile) {
     signals.push({
       kind: "tool",
