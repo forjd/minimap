@@ -50,11 +50,10 @@ export async function scanRepo(cwd = process.cwd()): Promise<RepoScan> {
   const filesRead = new Set<string>();
   const warnings: string[] = [];
   const files = createRepoFileMap(resolvedCwd, filesRead, warnings);
-  const signals = [];
-
-  for (const detector of detectors) {
-    signals.push(...(await detector({ cwd: resolvedCwd, files, warnings })));
-  }
+  const detectorResults = await Promise.all(
+    detectors.map((detector) => detector({ cwd: resolvedCwd, files, warnings })),
+  );
+  const signals = detectorResults.flat();
 
   if (
     signals.length === 0 &&
