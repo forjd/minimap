@@ -1,12 +1,74 @@
 # Minimap
 
-Minimap is a Bun + TypeScript CLI that compiles high-signal repository facts into durable agent instructions.
+Deterministic repository context for coding agents.
 
-It scans local project manifests and config files, infers the stack, package managers, commands, testing tools, and important conventions, then writes a managed block into files such as `AGENTS.md` or `CLAUDE.md`.
+[![CI](https://github.com/forjd/minimap/actions/workflows/ci.yml/badge.svg)](https://github.com/forjd/minimap/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Runtime: Bun](https://img.shields.io/badge/runtime-Bun-black.svg)](https://bun.sh)
+[![Status: MVP](https://img.shields.io/badge/status-MVP-orange.svg)](#project-status)
 
-It is intentionally not a README generator. Minimap produces compact, deterministic context for coding agents.
+Minimap scans a local repository, detects high-signal project facts, and writes a compact managed context block into files such as `AGENTS.md` and `CLAUDE.md`.
 
-## Install
+It is not a README generator. It is a deterministic context compiler for coding agents.
+
+```bash
+minimap scan
+minimap generate
+minimap write --target AGENTS.md
+minimap check --target AGENTS.md
+```
+
+## Why Minimap?
+
+Coding agents repeatedly rediscover the same repository basics:
+
+- Which language, framework, and package manager is this?
+- How should tests, linting, formatting, and type checks run?
+- Is this Laravel, Vue, Inertia, Vite, Tailwind, Pest, PHPUnit, React, Next.js, or something else?
+- Which commands are useful validation commands, and which commands should not be run without permission?
+- What project conventions should an agent preserve before making changes?
+
+Minimap turns those signals into durable, evidence-backed instructions.
+
+```mermaid
+flowchart LR
+  A["Repository files"] --> B["minimap scan"]
+  B --> C["agent context block"]
+  C --> D["AGENTS.md / CLAUDE.md"]
+  D --> E["minimap check"]
+```
+
+## Example Output
+
+Minimap writes only inside its managed block:
+
+```md
+<!-- minimap:start -->
+
+<repo_context generated_by="minimap" schema_version="1">
+
+  <summary>
+    Laravel + Vue/Inertia + TypeScript project using Composer, Bun, Pest, Vite, and Tailwind CSS.
+  </summary>
+
+  <stack>
+    <language name="PHP" confidence="high" evidence="composer.json present" />
+    <framework name="Laravel" confidence="high" evidence="laravel/framework dependency detected" />
+    <framework name="Vue" confidence="high" evidence="vue dependency detected" />
+    <tool name="Vite" confidence="high" evidence="vite dependency detected" />
+  </stack>
+
+  <commands>
+    <command name="php_tests" value="composer test" confidence="medium" category="test" />
+    <command name="frontend_build" value="bun run build" confidence="medium" category="build" />
+  </commands>
+</repo_context>
+<!-- minimap:end -->
+```
+
+## Installation
+
+Minimap is Bun-native.
 
 From source:
 
@@ -33,7 +95,9 @@ When Minimap is published to a package registry, it will be usable through the p
 
 ## Commands
 
-Scan the current repository and print detected signals:
+### Scan
+
+Scan the current repository and print detected signals as JSON:
 
 ```bash
 minimap scan
@@ -41,7 +105,9 @@ minimap scan --pretty
 minimap scan --cwd ./some-project
 ```
 
-Generate the managed context block:
+### Generate
+
+Generate a managed context block without writing it:
 
 ```bash
 minimap generate
@@ -49,76 +115,126 @@ minimap generate --profile agents
 minimap generate --profile claude
 ```
 
-Write or update a managed block:
+The `agents` and `claude` profiles currently produce the same output. The profile option exists so output can diverge later.
+
+### Write
+
+Create or update a managed block in a target file:
 
 ```bash
 minimap write --target AGENTS.md
 minimap write --target CLAUDE.md
+```
+
+Preview the resulting file without writing:
+
+```bash
 minimap write --target AGENTS.md --dry-run
 ```
 
-Check whether a target block is current:
+### Check
+
+Detect context drift:
 
 ```bash
 minimap check --target AGENTS.md
 ```
 
-`check` exits `0` when the block matches the current repository scan. It exits `1` when the file is missing, the managed block is missing, multiple blocks are present, or the generated block has drifted.
+`check` exits:
 
-## Managed Block
+- `0` when the managed block matches the current repository scan.
+- `1` when the file is missing, the managed block is missing, multiple blocks are present, or the generated block has drifted.
 
-Minimap only writes content between stable markers:
+## Safe Writes
+
+Minimap uses stable markers:
 
 ```md
 <!-- minimap:start -->
 
-<repo_context generated_by="minimap" schema_version="1">
 ...
-</repo_context>
 
 <!-- minimap:end -->
 ```
 
-If the target file does not exist, Minimap creates it. If the target exists without a managed block, Minimap appends the block. If the target contains one managed block, Minimap replaces only that block. If multiple managed blocks are found, Minimap refuses to write.
+Write behavior is conservative:
 
-## Supported Signals
-
-MVP detection covers:
-
-- Node, JavaScript, and TypeScript via `package.json`.
-- Bun, pnpm, Yarn, and npm via lockfiles.
-- PHP and Composer via `composer.json`.
-- Laravel via `laravel/framework` or `artisan` plus `bootstrap/app.php`.
-- Vue, React, Next.js, Nuxt, Svelte, SvelteKit, Inertia, Vite, Tailwind CSS.
-- Vitest, Jest, Playwright, Cypress, Pest, PHPUnit.
-- ESLint, oxlint, Biome, Pint, PHPStan, Larastan.
-- Shallow GitHub Actions workflow presence and names.
+- If the target file does not exist, Minimap creates it.
+- If the target exists without a managed block, Minimap appends the block.
+- If the target contains one managed block, Minimap replaces only that block.
+- If multiple managed blocks are found, Minimap refuses to write.
+- Human-authored content outside the managed block is preserved.
 
 ## Safety Model
 
 Minimap is local-only and deterministic.
 
-- It does not call an LLM.
-- It does not run project scripts during scan or generation.
-- It does not evaluate JavaScript, TypeScript, PHP, or config files.
-- It reads only targeted manifest/config files and shallow workflow files.
-- It refuses writes when managed block state is ambiguous.
-- It classifies dangerous commands such as database resets, publishing, deployment, and volume deletion as risks instead of validation commands.
+It does not:
+
+- call an LLM
+- run project scripts during scan or generation
+- evaluate JavaScript, TypeScript, PHP, or config files
+- recursively summarize source files
+- overwrite content outside the managed block
+- send repository data to external services
+
+It does:
+
+- read targeted manifest and config files
+- classify commands as validation, development, formatting, or risk signals
+- mark destructive database, publishing, deployment, and volume deletion commands as risks
+- include confidence and evidence for inferred facts
+
+## Supported Signals
+
+MVP detection covers:
+
+- Node, JavaScript, and TypeScript via `package.json`
+- Bun, pnpm, Yarn, and npm via lockfiles
+- PHP and Composer via `composer.json`
+- Laravel via `laravel/framework` or `artisan` plus `bootstrap/app.php`
+- Vue, React, Next.js, Nuxt, Svelte, SvelteKit, Inertia, Vite, Tailwind CSS
+- Vitest, Jest, Playwright, Cypress, Pest, PHPUnit
+- ESLint, oxlint, Biome, Pint, PHPStan, Larastan
+- shallow GitHub Actions workflow presence and names
+
+## Good For
+
+- Maintaining `AGENTS.md` or `CLAUDE.md`
+- Giving coding agents a fast repository orientation
+- Keeping context blocks current with `minimap check`
+- CI drift checks for agent instructions
+- Avoiding repeated manual repo summaries
+
+## Project Status
+
+Minimap is an MVP.
+
+Current limitations:
+
+- Bun is the supported runtime.
+- Node-compatible bundling is not a goal yet.
+- Monorepo support is shallow.
+- Staleness checks compare the generated managed block exactly.
+- The scanner intentionally avoids deep source parsing.
 
 ## Development
 
 ```bash
-bun test
+bun install
+bun run format:check
 bun run lint
 bun run typecheck
+bun test
+```
+
+Format changed files:
+
+```bash
 bun run format
 ```
 
 The test suite uses fixture repositories and snapshots for generated output.
-
-## Project Status
-
-Minimap is an MVP. It supports a focused set of Node, TypeScript, PHP, Laravel, and frontend ecosystem signals. It does not deeply parse source code, execute project commands, call external services, or use an LLM.
 
 ## Contributing
 
