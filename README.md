@@ -72,6 +72,12 @@ Minimap writes only inside its managed block:
 
 Minimap is Bun-native.
 
+Install automatically:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/forjd/minimap/main/install.sh | bash
+```
+
 Run with Bun:
 
 ```bash
@@ -101,6 +107,12 @@ tar -xzf minimap-v*-linux-x64.tar.gz
 ```
 
 Downloads are available for macOS, Linux, and Windows from the latest GitHub release.
+
+The installer can be made explicit for scripts:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/forjd/minimap/main/install.sh | INSTALL_METHOD=binary BIN_DIR="$HOME/.local/bin" bash
+```
 
 For local development:
 
