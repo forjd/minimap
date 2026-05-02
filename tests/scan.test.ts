@@ -119,6 +119,12 @@ describe("scanRepo", () => {
       expect.objectContaining({ kind: "framework", name: "SwiftUI" }),
     );
   });
+
+  test("does not warn for infrastructure-only repositories", async () => {
+    const scan = await scanRepo(fixture("infra-only"));
+    expect(scan.signals).toContainEqual(expect.objectContaining({ kind: "tool", name: "Make" }));
+    expect(scan.warnings).toEqual([]);
+  });
 });
 
 describe("classifyCommand", () => {
