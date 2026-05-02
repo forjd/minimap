@@ -21,7 +21,7 @@
     "url": "git+https://github.com/forjd/minimap.git"
   },
   "bin": {
-    "minimap": "./bin/minimap.js"
+    "minimap": "bin/minimap.js"
   },
   "files": [
     "bin",
