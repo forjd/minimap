@@ -13,7 +13,6 @@ exports[`renderAgentContext renders node vite vue snapshot 1`] = `
     <framework name="Vue" confidence="high" evidence="vue dependency detected" />
     <tool name="oxlint" confidence="high" evidence="oxlint dependency detected" />
     <tool name="Vite" confidence="high" evidence="vite dependency detected" />
-    <tool name="Vite" confidence="medium" evidence="Vite config present" />
     <test_framework name="Vitest" confidence="high" evidence="vitest dependency detected" />
   </stack>
 
@@ -116,7 +115,6 @@ exports[`renderAgentContext renders laravel vue inertia snapshot 1`] = `
     <tool name="Vite" confidence="high" evidence="vite dependency detected" />
     <test_framework name="Pest" confidence="high" evidence="pestphp/pest dependency detected" />
     <test_framework name="PHPUnit" confidence="high" evidence="phpunit/phpunit dependency detected" />
-    <test_framework name="PHPUnit" confidence="medium" evidence="PHPUnit config present" />
   </stack>
 
   <package_managers>

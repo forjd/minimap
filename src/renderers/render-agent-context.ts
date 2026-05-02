@@ -12,6 +12,20 @@ function signalsByKind(scan: RepoScan, kinds: RepoSignal["kind"][]): RepoSignal[
   return scan.signals.filter((signal) => kinds.includes(signal.kind));
 }
 
+function dedupeSignalsByKindAndName(signals: RepoSignal[]): RepoSignal[] {
+  const seen = new Set<string>();
+  const deduped: RepoSignal[] = [];
+
+  for (const signal of signals) {
+    const key = `${signal.kind}:${signal.name}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    deduped.push(signal);
+  }
+
+  return deduped;
+}
+
 function summarize(scan: RepoScan): string {
   const parts: string[] = [];
   if (hasSignal(scan, "Laravel")) parts.push("Laravel");
@@ -51,6 +65,7 @@ function elementName(signal: RepoSignal): string {
 }
 
 function renderStack(signals: RepoSignal[]): string[] {
+  signals = dedupeSignalsByKindAndName(signals);
   if (signals.length === 0) return [];
   return [
     "  <stack>",
@@ -64,6 +79,7 @@ function renderStack(signals: RepoSignal[]): string[] {
 }
 
 function renderPackageManagers(signals: RepoSignal[]): string[] {
+  signals = dedupeSignalsByKindAndName(signals);
   if (signals.length === 0) return [];
   return [
     "  <package_managers>",
