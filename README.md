@@ -91,6 +91,17 @@ Prefer shorthand?
 bun i -g @forjd/minimap
 ```
 
+Standalone binaries are also attached to GitHub releases for environments where installing Bun is inconvenient:
+
+```bash
+gh release download --repo forjd/minimap --pattern 'minimap-v*-linux-x64.tar.gz' --pattern SHA256SUMS
+sha256sum -c SHA256SUMS
+tar -xzf minimap-v*-linux-x64.tar.gz
+./minimap-linux-x64 --help
+```
+
+Downloads are available for macOS, Linux, and Windows from the latest GitHub release.
+
 For local development:
 
 ```bash
