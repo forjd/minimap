@@ -139,6 +139,13 @@ describe("scanRepo", () => {
     );
     expect(scan.warnings).toEqual([]);
   });
+
+  test("detects C and C++ projects", async () => {
+    const scan = await scanRepo(fixture("c-cpp"));
+    expect(scan.signals).toContainEqual(expect.objectContaining({ kind: "language", name: "C" }));
+    expect(scan.signals).toContainEqual(expect.objectContaining({ kind: "language", name: "C++" }));
+    expect(scan.signals).toContainEqual(expect.objectContaining({ kind: "tool", name: "CMake" }));
+  });
 });
 
 describe("classifyCommand", () => {
