@@ -21,9 +21,10 @@
     "url": "git+https://github.com/forjd/minimap.git"
   },
   "bin": {
-    "minimap": "./src/cli.ts"
+    "minimap": "./bin/minimap.js"
   },
   "files": [
+    "bin",
     "src",
     "README.md",
     "LICENSE"
