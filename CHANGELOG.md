@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.0](https://github.com/forjd/minimap/compare/v1.1.1...v1.2.0) (2026-05-02)
+
+
+### Features
+
+* add install script ([74b164a](https://github.com/forjd/minimap/commit/74b164ae00c8b67c4ee1848a1fbd527b9c4a2486))
+* detect monorepo workspaces ([59a524a](https://github.com/forjd/minimap/commit/59a524adc4bbc487752dffabfe194400efd7d96f))
+
 ## [1.1.1](https://github.com/forjd/minimap/compare/v1.1.0...v1.1.1) (2026-05-02)
 
 
