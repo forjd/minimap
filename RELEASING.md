@@ -9,6 +9,21 @@ Minimap uses Release Please for versioning, changelog generation, GitHub release
 3. Review and merge the release PR.
 4. Release Please creates the GitHub release and tag.
 5. The release workflow publishes `@forjd/minimap` to npm.
+6. The release workflow uploads standalone binaries and `SHA256SUMS` to the GitHub release.
+
+## Standalone Binaries
+
+The release workflow builds optional standalone binaries with Bun `build --compile`.
+
+Published targets:
+
+- `minimap-v<version>-darwin-arm64.tar.gz`
+- `minimap-v<version>-darwin-x64.tar.gz`
+- `minimap-v<version>-linux-arm64.tar.gz`
+- `minimap-v<version>-linux-x64.tar.gz`
+- `minimap-v<version>-windows-x64.zip`
+
+Linux and Windows x64 binaries use Bun's baseline target for wider CPU compatibility.
 
 ## npm Trusted Publishing
 

@@ -1,5 +1,8 @@
 name: Release Please
 
+env:
+  BUN_VERSION: 1.3.13
+
 on:
   push:
     branches:
@@ -32,7 +35,7 @@ jobs:
         if: ${{ steps.release.outputs.release_created == 'true' || github.event_name == 'workflow_dispatch' }}
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: latest
+          bun-version: ${{ env.BUN_VERSION }}
 
       - name: Set up Node for npm publish
         if: ${{ steps.release.outputs.release_created == 'true' || github.event_name == 'workflow_dispatch' }}
@@ -61,6 +64,43 @@ jobs:
         if: ${{ steps.release.outputs.release_created == 'true' || github.event_name == 'workflow_dispatch' }}
         run: bun run coverage
 
+      - name: Build release binaries
+        if: ${{ steps.release.outputs.release_created == 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          version="$(bun -e 'import pkg from "./package.json"; console.log(pkg.version)')"
+          raw_dir="dist/release/raw"
+          asset_dir="dist/release/assets"
+
+          mkdir -p "$raw_dir" "$asset_dir"
+
+          bun build --compile --minify --target=bun-darwin-arm64 src/cli.ts --outfile "$raw_dir/minimap-darwin-arm64"
+          bun build --compile --minify --target=bun-darwin-x64 src/cli.ts --outfile "$raw_dir/minimap-darwin-x64"
+          bun build --compile --minify --target=bun-linux-x64-baseline src/cli.ts --outfile "$raw_dir/minimap-linux-x64"
+          bun build --compile --minify --target=bun-linux-arm64 src/cli.ts --outfile "$raw_dir/minimap-linux-arm64"
+          bun build --compile --minify --target=bun-windows-x64-baseline src/cli.ts --outfile "$raw_dir/minimap-windows-x64.exe"
+
+          if [[ "$(uname -s)" == "Linux" && "$(uname -m)" == "x86_64" ]]; then
+            "$raw_dir/minimap-linux-x64" --version
+          fi
+
+          tar -C "$raw_dir" -czf "$asset_dir/minimap-v${version}-darwin-arm64.tar.gz" minimap-darwin-arm64
+          tar -C "$raw_dir" -czf "$asset_dir/minimap-v${version}-darwin-x64.tar.gz" minimap-darwin-x64
+          tar -C "$raw_dir" -czf "$asset_dir/minimap-v${version}-linux-x64.tar.gz" minimap-linux-x64
+          tar -C "$raw_dir" -czf "$asset_dir/minimap-v${version}-linux-arm64.tar.gz" minimap-linux-arm64
+          zip -j "$asset_dir/minimap-v${version}-windows-x64.zip" "$raw_dir/minimap-windows-x64.exe"
+
+          cd "$asset_dir"
+          sha256sum ./* > SHA256SUMS
+
       - name: Publish to npm
         if: ${{ steps.release.outputs.release_created == 'true' || github.event_name == 'workflow_dispatch' }}
         run: npm publish --access public
+
+      - name: Upload release binaries
+        if: ${{ steps.release.outputs.release_created == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "${{ steps.release.outputs.tag_name }}" dist/release/assets/* --clobber
