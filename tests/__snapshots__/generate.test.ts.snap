@@ -53,7 +53,7 @@ exports[`renderAgentContext renders node cli snapshot 1`] = `
 "<!-- minimap:start -->
 <repo_context generated_by="minimap" schema_version="1">
   <summary>
-    TypeScript CLI project using npm.
+    TypeScript CLI project using npm, Bun test.
   </summary>
 
   <stack>

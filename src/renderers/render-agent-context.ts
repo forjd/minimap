@@ -33,11 +33,43 @@ function summarize(scan: RepoScan): string {
   else if (hasSignal(scan, "Vue")) parts.push("Vue");
   if (hasSignal(scan, "React")) parts.push("React");
   if (hasSignal(scan, "Next.js")) parts.push("Next.js");
+  for (const framework of [
+    "Astro",
+    "SvelteKit",
+    "Svelte",
+    "Remix",
+    "Angular",
+    "Django",
+    "FastAPI",
+    "Flask",
+    "Ruby on Rails",
+    "Spring Boot",
+    "ASP.NET Core",
+    "SwiftUI",
+  ]) {
+    if (hasSignal(scan, framework) && !parts.includes(framework)) parts.push(framework);
+  }
   if (hasSignal(scan, "PHP") && !parts.includes("Laravel")) parts.push("PHP");
   const isCliApp = hasSignal(scan, "CLI application");
   if (hasSignal(scan, "TypeScript")) parts.push(isCliApp ? "TypeScript CLI" : "TypeScript");
   else if (hasSignal(scan, "JavaScript")) parts.push(isCliApp ? "JavaScript CLI" : "JavaScript");
-  else if (isCliApp) parts.push("CLI");
+  for (const language of [
+    "Python",
+    "Rust",
+    "Go",
+    "Ruby",
+    "Java",
+    "Kotlin",
+    "C#",
+    "F#",
+    "Swift",
+    "C",
+    "C++",
+    "Markdown",
+  ]) {
+    if (hasSignal(scan, language) && !parts.includes(language)) parts.push(language);
+  }
+  if (isCliApp && !parts.some((part) => part.includes("CLI"))) parts.push("CLI");
 
   const tools = [
     "Composer",
@@ -48,8 +80,19 @@ function summarize(scan: RepoScan): string {
     "Pest",
     "PHPUnit",
     "Vitest",
+    "Bun test",
     "Vite",
     "Tailwind CSS",
+    "Docker",
+    "Docker Compose",
+    "Make",
+    "SwiftPM",
+    "Cargo",
+    "Go modules",
+    "uv",
+    "Poetry",
+    ".NET SDK",
+    "CMake",
   ].filter((name) => hasSignal(scan, name));
 
   if (parts.length === 0) return "Repository context inferred from supported project manifests.";

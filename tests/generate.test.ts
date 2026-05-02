@@ -21,4 +21,11 @@ describe("renderAgentContext", () => {
     const scan = await scanRepo(fixture("laravel-vue-inertia"));
     expect(renderAgentContext(scan)).toMatchSnapshot();
   });
+
+  test("summarizes expanded ecosystem projects", async () => {
+    const scan = await scanRepo(fixture("expanded-ecosystems"));
+    expect(renderAgentContext(scan)).toContain(
+      "FastAPI + Ruby on Rails + Spring Boot + ASP.NET Core + Python + Rust + Go + Ruby + Java + C# project using Docker, Docker Compose, Cargo, Go modules, uv, .NET SDK.",
+    );
+  });
 });
