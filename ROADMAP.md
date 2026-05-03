@@ -44,16 +44,16 @@ Goal: increase usefulness across real repositories while preserving shallow, det
 - [x] Keep workspace output capped and deterministic for large repositories.
 - [x] Detect Python validation commands from `pyproject.toml`, uv, Poetry, pytest, Ruff, MyPy, and common scripts where available.
 - [x] Add command hints for Go, Rust, Java, .NET, and Ruby from canonical manifest files where this can be done without running code.
-- [ ] Improve framework coverage for common agent-facing stacks:
-  - [ ] Astro
-  - [ ] Remix
-  - [ ] Angular
-  - [ ] Tauri
-  - [ ] Rails
-  - [ ] Django
-  - [ ] FastAPI
-  - [ ] Cloudflare Workers
-- [ ] Add focused fixtures for each new ecosystem or framework signal.
+- [x] Improve framework coverage for common agent-facing stacks:
+  - [x] Astro
+  - [x] Remix
+  - [x] Angular
+  - [x] Tauri
+  - [x] Rails
+  - [x] Django
+  - [x] FastAPI
+  - [x] Cloudflare Workers
+- [x] Add focused fixtures for each new ecosystem or framework signal.
 
 ## Phase 3: Output Quality And Compatibility
 
