@@ -34,7 +34,7 @@ Goal: make the existing product loop more reliable and easier to trust.
   - [x] `kubectl delete`
   - [x] `terraform destroy`
   - [x] Docker volume pruning
-- [ ] Add a detector contract test helper so each detector proves deterministic output, evidence, confidence, and safe file access.
+- [x] Add a detector contract test helper so each detector proves deterministic output, evidence, confidence, and safe file access.
 
 ## Phase 2: Better Repository Coverage
 
