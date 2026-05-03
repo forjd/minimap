@@ -70,7 +70,7 @@ Goal: make rendered context more stable, expressive, and adaptable to agent targ
 
 Goal: make installation, release, and ongoing adoption boring.
 
-- [ ] Add installer tests with mocked release metadata and checksum files.
+- [x] Add installer tests with mocked release metadata and checksum files.
 - [ ] Add release binary smoke tests across the supported platforms where practical.
 - [ ] Improve the packaged Minimap skill with concrete preview, write, and check examples.
 - [ ] Publish a short CI drift-check recipe.
