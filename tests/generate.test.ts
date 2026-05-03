@@ -61,6 +61,7 @@ describe("renderAgentContext", () => {
           path,
           manager: "pnpm",
           pattern: "packages/*",
+          stack: ["JavaScript", index % 2 === 0 ? "React" : "Vue"],
         },
       };
     });
@@ -73,13 +74,17 @@ describe("renderAgentContext", () => {
     };
 
     const context = renderAgentContext(scan);
+    const repeatedContext = renderAgentContext(scan);
 
+    expect(repeatedContext).toBe(context);
     expect(context.match(/<workspace path=/g)?.length).toBe(40);
     expect(context).toContain('<workspace_overflow total="45" rendered="40" omitted="5">');
     expect(context).toContain(
       '<workspace_group count="5" source="pnpm-workspace.yaml" manager="pnpm" pattern="packages/*" />',
     );
     expect(context).toContain('<workspace path="packages/pkg-40"');
+    expect(context).toContain('stack="JavaScript, React"');
+    expect(context).toContain('stack="JavaScript, Vue"');
     expect(context).not.toContain('<workspace path="packages/pkg-41"');
   });
 });
