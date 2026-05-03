@@ -1,4 +1,5 @@
 import type { RepoScan, RepoSignal } from "../core/signals";
+import type { RenderProfile } from "./profiles";
 import { xmlAttribute, xmlText } from "./xml";
 
 export const startMarker = "<!-- minimap:start -->";
@@ -313,7 +314,7 @@ function renderWarnings(scan: RepoScan): string[] {
   ];
 }
 
-export function renderAgentContext(scan: RepoScan): string {
+export function renderAgentContext(scan: RepoScan, profile: RenderProfile = "agents"): string {
   const stack = signalsByKind(scan, [
     "language",
     "framework",
@@ -327,7 +328,9 @@ export function renderAgentContext(scan: RepoScan): string {
 
   const lines = [
     startMarker,
-    '<repo_context generated_by="minimap" schema_version="1">',
+    profile === "claude"
+      ? '<repo_context generated_by="minimap" schema_version="1" profile="claude">'
+      : '<repo_context generated_by="minimap" schema_version="1">',
     "  <summary>",
     `    ${xmlText(summarize(scan))}`,
     "  </summary>",

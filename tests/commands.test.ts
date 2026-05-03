@@ -107,6 +107,20 @@ describe("commands", () => {
     expect(result.stderr).toBe("");
   });
 
+  test("generate uses claude profile", async () => {
+    const result = await withCapturedOutput(async () => {
+      await parseCommand(createGenerateCommand(), [
+        "--cwd",
+        fixture("node-cli"),
+        "--profile",
+        "claude",
+      ]);
+    });
+
+    expect(result.stderr).toBe("");
+    expect(result.stdout).toContain('profile="claude"');
+  });
+
   test("write dry-run prints the target content without writing", async () => {
     const dir = await mkdtemp(join(tmpdir(), "minimap-command-"));
     try {

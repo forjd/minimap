@@ -60,7 +60,7 @@ Goal: increase usefulness across real repositories while preserving shallow, det
 Goal: make rendered context more stable, expressive, and adaptable to agent targets.
 
 - [x] Document `schema_version` expectations and add migration notes for future schema changes.
-- [ ] Make profiles diverge where useful instead of keeping `agents` and `claude` identical indefinitely.
+- [x] Make profiles diverge where useful instead of keeping `agents` and `claude` identical indefinitely.
 - [ ] Consider additional explicit profiles for common agent instruction targets.
 - [ ] Evaluate `generate --format json|xml|markdown` only if there is a concrete consumer need.
 - [ ] Add configurable evidence and workspace rendering limits with stable defaults.

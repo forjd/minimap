@@ -12,11 +12,11 @@ export function createGenerateCommand(): Command {
     .option("--format <format>", "Output format. Markdown is the only MVP format.", "markdown")
     .option("--cwd <path>", "Repository path to scan.")
     .action(async (options: { profile?: string; format?: string; cwd?: string }) => {
-      parseProfile(options.profile);
+      const profile = parseProfile(options.profile);
       if (options.format !== "markdown") {
         throw new Error(`Unsupported format "${options.format}". Expected markdown.`);
       }
       const scan = await scanRepo(resolveCwd(options.cwd));
-      process.stdout.write(renderAgentContext(scan));
+      process.stdout.write(renderAgentContext(scan, profile));
     });
 }

@@ -169,7 +169,7 @@ minimap generate --profile agents
 minimap generate --profile claude
 ```
 
-The `agents` and `claude` profiles currently produce the same output. The profile option exists so output can diverge later.
+The default `agents` profile keeps the generic schema. The `claude` profile adds explicit profile metadata to the generated block so `CLAUDE.md` consumers can distinguish profile-specific output.
 
 ### Write
 

@@ -2,6 +2,7 @@ import { Command } from "commander";
 
 import { scanRepo } from "../core/scan-repo";
 import { renderAgentContext } from "../renderers/render-agent-context";
+import { parseProfile } from "../renderers/profiles";
 import { getManagedBlock, ManagedBlockError, normalizeBlock } from "../writers/managed-block";
 import { compactDiffMessage } from "../writers/diff";
 import { assertExistingTargetInside, resolveCwd, resolveTarget } from "../utils/paths";
@@ -10,9 +11,11 @@ export function createCheckCommand(): Command {
   return new Command("check")
     .description("Check whether a target file has a current minimap managed block.")
     .requiredOption("--target <file>", "Target file to check, such as AGENTS.md.")
+    .option("--profile <profile>", "Output profile: agents or claude.", "agents")
     .option("--cwd <path>", "Repository path to scan.")
-    .action(async (options: { target: string; cwd?: string }) => {
+    .action(async (options: { target: string; profile?: string; cwd?: string }) => {
       const cwd = resolveCwd(options.cwd);
+      const profile = parseProfile(options.profile);
       const targetPath = resolveTarget(cwd, options.target);
       const targetFile = Bun.file(targetPath);
       if (!(await targetFile.exists())) {
@@ -39,7 +42,7 @@ export function createCheckCommand(): Command {
         return;
       }
 
-      const currentBlock = renderAgentContext(await scanRepo(cwd));
+      const currentBlock = renderAgentContext(await scanRepo(cwd), profile);
       if (normalizeBlock(existingBlock) === normalizeBlock(currentBlock)) {
         console.log(`${options.target} minimap block is current.`);
         return;

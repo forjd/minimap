@@ -24,6 +24,14 @@ describe("renderAgentContext", () => {
     expect(renderAgentContext(scan)).toMatchSnapshot();
   });
 
+  test("renders claude profile metadata", async () => {
+    const scan = await scanRepo(fixture("node-cli"));
+    const context = renderAgentContext(scan, "claude");
+    expect(context).toContain(
+      '<repo_context generated_by="minimap" schema_version="1" profile="claude">',
+    );
+  });
+
   test("renders this repository AGENTS.md managed block snapshot", async () => {
     const scan = await scanRepo(repositoryRoot);
     expect(renderAgentContext(scan)).toMatchSnapshot();
