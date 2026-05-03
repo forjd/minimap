@@ -28,12 +28,12 @@ Goal: make the existing product loop more reliable and easier to trust.
 - [x] Add `minimap check --target AGENTS.md` to this repository's CI and document the same pattern for downstream repositories.
 - [x] Improve drift output so stale blocks show a compact, actionable diff instead of only reporting drift.
 - [x] Add snapshot coverage for this repository's own generated `AGENTS.md` managed block.
-- [ ] Expand risky command classification for common destructive operations:
-  - [ ] Prisma migrations and resets
-  - [ ] Rails database resets
-  - [ ] `kubectl delete`
-  - [ ] `terraform destroy`
-  - [ ] Docker volume pruning
+- [x] Expand risky command classification for common destructive operations:
+  - [x] Prisma migrations and resets
+  - [x] Rails database resets
+  - [x] `kubectl delete`
+  - [x] `terraform destroy`
+  - [x] Docker volume pruning
 - [ ] Add a detector contract test helper so each detector proves deterministic output, evidence, confidence, and safe file access.
 
 ## Phase 2: Better Repository Coverage

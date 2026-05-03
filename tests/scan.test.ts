@@ -178,6 +178,13 @@ describe("classifyCommand", () => {
     expect(classifyCommand("typecheck", "tsc --noEmit")).toBe("typecheck");
     expect(classifyCommand("deploy", "npm publish")).toBe("dangerous");
     expect(classifyCommand("setup", "php artisan migrate --force")).toBe("dangerous");
+    expect(classifyCommand("db:reset", "prisma migrate reset --force")).toBe("dangerous");
+    expect(classifyCommand("migrate", "prisma migrate deploy")).toBe("dangerous");
+    expect(classifyCommand("db:reset", "rails db:reset")).toBe("dangerous");
+    expect(classifyCommand("db:drop", "bundle exec rake db:drop")).toBe("dangerous");
+    expect(classifyCommand("k8s:clean", "kubectl delete namespace preview")).toBe("dangerous");
+    expect(classifyCommand("infra:destroy", "terraform destroy -auto-approve")).toBe("dangerous");
+    expect(classifyCommand("volumes:prune", "docker volume prune --force")).toBe("dangerous");
     expect(classifyCommand("prepare", "command -v husky >/dev/null 2>&1 && husky || true")).toBe(
       "unknown",
     );

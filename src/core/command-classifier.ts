@@ -12,15 +12,25 @@ export type CommandCategory =
   | "dangerous"
   | "unknown";
 
-const dangerousPattern =
-  /\b(migrate:fresh|migrate:reset|migrate\s+--force|db:wipe|publish|deploy|terraform apply|rm -rf|docker compose down -v|docker-compose down -v|seed)\b/i;
+const dangerousPatterns = [
+  /\b(migrate:fresh|migrate:reset|migrate\s+--force|db:wipe|seed)\b/i,
+  /\bprisma\s+migrate\s+(deploy|dev|reset)\b/i,
+  /\brails\s+db:(drop|migrate:reset|reset|schema:load|setup)\b/i,
+  /\brake\s+db:(drop|migrate:reset|reset|schema:load|setup)\b/i,
+  /\bkubectl\s+delete\b/i,
+  /\bterraform\s+(apply|destroy)\b/i,
+  /\bdocker\s+volume\s+prune\b/i,
+  /\bdocker\s+(compose\s+down|system\s+prune)\s+.*\s-v\b/i,
+  /\bdocker-compose\s+down\s+.*\s-v\b/i,
+  /\b(rm -rf|publish|deploy)\b/i,
+];
 
 export function classifyCommand(name: string, value: string): CommandCategory {
   const normalizedName = name.toLowerCase();
   const normalizedValue = value.toLowerCase();
   const haystack = `${name} ${value}`.toLowerCase();
 
-  if (dangerousPattern.test(haystack)) return "dangerous";
+  if (dangerousPatterns.some((pattern) => pattern.test(haystack))) return "dangerous";
   if (/\b(e2e)\b/.test(normalizedName)) return "e2e";
   if (/\b(typecheck|type-check|types|stan|analyse|analyze)\b/.test(normalizedName))
     return "typecheck";
