@@ -15,7 +15,7 @@
 
   <stack>
     <language name="JavaScript" confidence="high" evidence="package.json present" />
-    <language name="Markdown" confidence="medium" evidence="6 Markdown files detected" />
+    <language name="Markdown" confidence="medium" evidence="7 Markdown files detected" />
     <language name="TypeScript" confidence="high" evidence="typescript dependency detected" />
     <tool name="oxfmt" confidence="high" evidence="oxfmt dependency detected" />
     <tool name="oxlint" confidence="high" evidence="oxlint dependency detected" />
@@ -44,7 +44,7 @@
 
   <evidence>
     <item source="package.json">Detected JavaScript: package.json present.</item>
-    <item source="README.md">Detected Markdown: 6 Markdown files detected.</item>
+    <item source="README.md">Detected Markdown: 7 Markdown files detected.</item>
     <item source="package.json">Detected TypeScript: typescript dependency detected.</item>
     <item source="package.json">Detected oxfmt: oxfmt dependency detected.</item>
     <item source="package.json">Detected oxlint: oxlint dependency detected.</item>

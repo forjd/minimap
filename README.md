@@ -194,6 +194,13 @@ Detect context drift:
 minimap check --target AGENTS.md
 ```
 
+Use the same command in CI to keep checked-in agent instructions current:
+
+```yaml
+- name: Check agent context drift
+  run: bunx @forjd/minimap check --target AGENTS.md
+```
+
 `check` exits:
 
 - `0` when the managed block matches the current repository scan.

@@ -25,7 +25,7 @@ Known MVP limitations:
 
 Goal: make the existing product loop more reliable and easier to trust.
 
-- [ ] Add `minimap check --target AGENTS.md` to this repository's CI and document the same pattern for downstream repositories.
+- [x] Add `minimap check --target AGENTS.md` to this repository's CI and document the same pattern for downstream repositories.
 - [ ] Improve drift output so stale blocks show a compact, actionable diff instead of only reporting drift.
 - [ ] Add snapshot coverage for this repository's own generated `AGENTS.md` managed block.
 - [ ] Expand risky command classification for common destructive operations:

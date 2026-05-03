@@ -36,5 +36,8 @@ jobs:
       - name: Typecheck
         run: bun run typecheck
 
+      - name: Check AGENTS.md context drift
+        run: bun run src/cli.ts check --target AGENTS.md
+
       - name: Test with coverage
         run: bun run coverage
