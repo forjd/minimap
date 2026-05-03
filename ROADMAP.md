@@ -17,7 +17,7 @@ Known MVP limitations:
 
 - Bun is the supported runtime.
 - Node-compatible bundling is not a goal yet.
-- Monorepo support detects root workspace configuration and package manifests, but does not deeply scan each package yet.
+- Monorepo support detects root workspace configuration and summarizes detected package stacks from workspace manifests.
 - Staleness checks compare the generated managed block exactly.
 - The scanner intentionally avoids deep source parsing.
 
