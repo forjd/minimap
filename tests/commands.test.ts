@@ -303,9 +303,12 @@ describe("commands", () => {
       });
 
       expect(result.stdout).toBe("");
-      expect(result.stderr).toBe(
+      expect(result.stderr).toContain(
         "AGENTS.md minimap block is stale. Run `minimap write --target AGENTS.md` to update it.\n",
       );
+      expect(result.stderr).toContain("Diff (current -> expected):\n@@ line ");
+      expect(result.stderr).toContain("-    PHP project using Stale.");
+      expect(result.stderr).toContain("+    PHP project using Composer.");
       expect(result.exitCode).toBe(1);
     } finally {
       await rm(dir, { recursive: true, force: true });

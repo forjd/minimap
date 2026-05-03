@@ -3,7 +3,7 @@ import { Command } from "commander";
 import { scanRepo } from "../core/scan-repo";
 import { renderAgentContext } from "../renderers/render-agent-context";
 import { getManagedBlock, ManagedBlockError, normalizeBlock } from "../writers/managed-block";
-import { simpleDiffMessage } from "../writers/diff";
+import { compactDiffMessage } from "../writers/diff";
 import { assertExistingTargetInside, resolveCwd, resolveTarget } from "../utils/paths";
 
 export function createCheckCommand(): Command {
@@ -45,7 +45,13 @@ export function createCheckCommand(): Command {
         return;
       }
 
-      console.error(simpleDiffMessage(options.target));
+      console.error(
+        compactDiffMessage(
+          options.target,
+          normalizeBlock(existingBlock),
+          normalizeBlock(currentBlock),
+        ),
+      );
       process.exitCode = 1;
     });
 }
