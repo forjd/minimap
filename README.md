@@ -171,6 +171,8 @@ minimap generate --profile claude
 
 The default `agents` profile keeps the generic schema. The `claude` profile adds explicit profile metadata to the generated block so `CLAUDE.md` consumers can distinguish profile-specific output.
 
+Minimap intentionally ships only these two profiles for now. Additional targets should be added only when they need concrete output differences, not as aliases for the same block.
+
 ### Write
 
 Create or update a managed block in a target file:
