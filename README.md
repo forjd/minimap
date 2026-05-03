@@ -216,6 +216,21 @@ Use the same command in CI to keep checked-in agent instructions current:
 
 By default, `check` compares the generated block exactly. Use `--normalized` only when a repository intentionally tolerates line-ending or outer-whitespace churn.
 
+### CI Drift Check Recipe
+
+For a Bun-based repository, add this after dependency installation:
+
+```yaml
+- name: Check agent context drift
+  run: bunx @forjd/minimap check --target AGENTS.md
+```
+
+If the check fails, refresh the managed block locally and commit the result:
+
+```bash
+bunx @forjd/minimap write --target AGENTS.md
+```
+
 ## Safe Writes
 
 Minimap uses stable markers:

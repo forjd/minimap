@@ -73,7 +73,7 @@ Goal: make installation, release, and ongoing adoption boring.
 - [x] Add installer tests with mocked release metadata and checksum files.
 - [x] Add release binary smoke tests across the supported platforms where practical.
 - [x] Improve the packaged Minimap skill with concrete preview, write, and check examples.
-- [ ] Publish a short CI drift-check recipe.
+- [x] Publish a short CI drift-check recipe.
 - [ ] Add comparison docs explaining when to use Minimap versus hand-authored project instructions.
 
 ## Suggested Next Issues
