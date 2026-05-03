@@ -14,6 +14,7 @@ export function createCheckCommand(): Command {
     .option("--profile <profile>", "Output profile: agents or claude.", "agents")
     .option("--evidence-limit <count>", "Maximum rendered evidence items.")
     .option("--workspace-limit <count>", "Maximum rendered workspace entries.")
+    .option("--normalized", "Ignore line ending and outer whitespace differences.")
     .option("--cwd <path>", "Repository path to scan.")
     .action(
       async (options: {
@@ -21,6 +22,7 @@ export function createCheckCommand(): Command {
         profile?: string;
         evidenceLimit?: string;
         workspaceLimit?: string;
+        normalized?: boolean;
         cwd?: string;
       }) => {
         const cwd = resolveCwd(options.cwd);
@@ -59,8 +61,12 @@ export function createCheckCommand(): Command {
         const currentBlock = renderAgentContext(await scanRepo(cwd), profile, {
           evidenceLimit,
           workspaceLimit,
-        });
-        if (normalizeBlock(existingBlock) === normalizeBlock(currentBlock)) {
+        }).trimEnd();
+        const blocksMatch = options.normalized
+          ? normalizeBlock(existingBlock) === normalizeBlock(currentBlock)
+          : existingBlock === currentBlock;
+
+        if (blocksMatch) {
           console.log(`${options.target} minimap block is current.`);
           return;
         }
@@ -68,8 +74,8 @@ export function createCheckCommand(): Command {
         console.error(
           compactDiffMessage(
             options.target,
-            normalizeBlock(existingBlock),
-            normalizeBlock(currentBlock),
+            options.normalized ? normalizeBlock(existingBlock) : existingBlock,
+            options.normalized ? normalizeBlock(currentBlock) : currentBlock,
           ),
         );
         process.exitCode = 1;

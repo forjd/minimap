@@ -199,6 +199,7 @@ Detect context drift:
 
 ```bash
 minimap check --target AGENTS.md
+minimap check --target AGENTS.md --normalized
 ```
 
 Use the same command in CI to keep checked-in agent instructions current:
@@ -212,6 +213,8 @@ Use the same command in CI to keep checked-in agent instructions current:
 
 - `0` when the managed block matches the current repository scan.
 - `1` when the file is missing, the managed block is missing, multiple blocks are present, or the generated block has drifted.
+
+By default, `check` compares the generated block exactly. Use `--normalized` only when a repository intentionally tolerates line-ending or outer-whitespace churn.
 
 ## Safe Writes
 

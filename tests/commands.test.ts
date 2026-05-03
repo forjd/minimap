@@ -305,6 +305,37 @@ describe("commands", () => {
     }
   });
 
+  test("check normalized mode ignores line ending drift", async () => {
+    const dir = await mkdtemp(join(tmpdir(), "minimap-command-"));
+    try {
+      await writeFile(join(dir, "composer.json"), '{"require":{"php":"^8.3"}}');
+      const block = renderAgentContext(await scanRepo(dir));
+      const content = upsertManagedBlock("# AGENTS\n", block).replaceAll("\n", "\r\n");
+      await writeFile(join(dir, "AGENTS.md"), content);
+
+      const exact = await withCapturedOutput(async () => {
+        await parseCommand(createCheckCommand(), ["--cwd", dir, "--target", "AGENTS.md"]);
+      });
+      expect(exact.stderr).toContain("AGENTS.md minimap block is stale.");
+      expect(exact.exitCode).toBe(1);
+
+      const normalized = await withCapturedOutput(async () => {
+        await parseCommand(createCheckCommand(), [
+          "--cwd",
+          dir,
+          "--target",
+          "AGENTS.md",
+          "--normalized",
+        ]);
+      });
+      expect(normalized.stdout).toBe("AGENTS.md minimap block is current.\n");
+      expect(normalized.stderr).toBe("");
+      expect(normalized.exitCode).toBe(0);
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
+  });
+
   test("check reports stale managed blocks", async () => {
     const dir = await mkdtemp(join(tmpdir(), "minimap-command-"));
     try {
