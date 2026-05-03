@@ -41,10 +41,10 @@ describe("renderAgentContext", () => {
     const context = renderAgentContext(scan);
     expect(context).toContain("<workspaces>");
     expect(context).toContain(
-      '<workspace path="apps/web" confidence="high" source="pnpm-workspace.yaml" manager="pnpm" evidence="pnpm-workspace.yaml present" />',
+      '<workspace path="apps/web" confidence="high" source="pnpm-workspace.yaml" manager="pnpm" stack="JavaScript, React, Vite" evidence="pnpm-workspace.yaml present" />',
     );
     expect(context).toContain(
-      '<workspace path="packages/ui" confidence="high" source="pnpm-workspace.yaml" manager="pnpm" evidence="pnpm-workspace.yaml present" />',
+      '<workspace path="packages/ui" confidence="high" source="pnpm-workspace.yaml" manager="pnpm" stack="JavaScript, React" evidence="pnpm-workspace.yaml present" />',
     );
   });
 

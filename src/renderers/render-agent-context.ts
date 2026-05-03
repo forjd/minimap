@@ -157,7 +157,10 @@ function renderWorkspaces(signals: RepoSignal[]): string[] {
       const manager = signal.metadata?.manager
         ? ` manager="${xmlAttribute(String(signal.metadata.manager))}"`
         : "";
-      return `    <workspace path="${xmlAttribute(path)}" confidence="${signal.confidence}" source="${xmlAttribute(signal.source)}"${manager} evidence="${xmlAttribute(signal.evidence)}" />`;
+      const stack = Array.isArray(signal.metadata?.stack)
+        ? ` stack="${xmlAttribute(signal.metadata.stack.map(String).join(", "))}"`
+        : "";
+      return `    <workspace path="${xmlAttribute(path)}" confidence="${signal.confidence}" source="${xmlAttribute(signal.source)}"${manager}${stack} evidence="${xmlAttribute(signal.evidence)}" />`;
     }),
     ...renderWorkspaceOverflow(
       signals.length,

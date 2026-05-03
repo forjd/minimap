@@ -159,14 +159,22 @@ describe("scanRepo", () => {
       expect.objectContaining({
         kind: "workspace",
         name: "apps/web",
-        metadata: expect.objectContaining({ manager: "pnpm", path: "apps/web" }),
+        metadata: expect.objectContaining({
+          manager: "pnpm",
+          path: "apps/web",
+          stack: ["JavaScript", "React", "Vite"],
+        }),
       }),
     );
     expect(scan.signals).toContainEqual(
       expect.objectContaining({
         kind: "workspace",
         name: "packages/ui",
-        metadata: expect.objectContaining({ manager: "pnpm", path: "packages/ui" }),
+        metadata: expect.objectContaining({
+          manager: "pnpm",
+          path: "packages/ui",
+          stack: ["JavaScript", "React"],
+        }),
       }),
     );
   });

@@ -5,6 +5,7 @@ import { z } from "zod";
 import type { Confidence, Detector, RepoSignal } from "../core/signals";
 
 const packageJsonSchema = z.object({
+  name: z.string().optional(),
   workspaces: z
     .union([
       z.array(z.string()),
@@ -13,6 +14,9 @@ const packageJsonSchema = z.object({
       }),
     ])
     .optional(),
+  dependencies: z.record(z.string(), z.string()).optional(),
+  devDependencies: z.record(z.string(), z.string()).optional(),
+  peerDependencies: z.record(z.string(), z.string()).optional(),
 });
 
 const lernaJsonSchema = z.object({
@@ -80,8 +84,8 @@ function manifestPattern(pattern: string): string | null {
 async function workspacePaths(
   files: { listFiles(patterns: string[]): Promise<string[]> },
   patterns: string[],
-): Promise<Array<{ path: string; pattern: string }>> {
-  const byPath = new Map<string, string>();
+): Promise<Array<{ path: string; manifest: string; pattern: string }>> {
+  const byPath = new Map<string, { manifest: string; pattern: string }>();
 
   for (const pattern of patterns) {
     const manifest = manifestPattern(pattern);
@@ -91,13 +95,40 @@ async function workspacePaths(
       if (match.includes("node_modules/")) continue;
       const path = dirname(match);
       if (path === ".") continue;
-      byPath.set(path, pattern);
+      byPath.set(path, { manifest: match, pattern });
     }
   }
 
   return [...byPath.entries()]
-    .map(([path, pattern]) => ({ path, pattern }))
+    .map(([path, workspace]) => ({ path, ...workspace }))
     .sort((a, b) => a.path.localeCompare(b.path));
+}
+
+function workspacePackageStack(pkg: z.infer<typeof packageJsonSchema>): string[] {
+  const deps = Object.assign({}, pkg.dependencies, pkg.devDependencies, pkg.peerDependencies);
+  const stack: string[] = ["JavaScript"];
+
+  const detected: Array<[string, string]> = [
+    ["typescript", "TypeScript"],
+    ["react", "React"],
+    ["next", "Next.js"],
+    ["vue", "Vue"],
+    ["@remix-run/react", "Remix"],
+    ["astro", "Astro"],
+    ["@angular/core", "Angular"],
+    ["svelte", "Svelte"],
+    ["@sveltejs/kit", "SvelteKit"],
+    ["vite", "Vite"],
+    ["tailwindcss", "Tailwind CSS"],
+    ["vitest", "Vitest"],
+    ["jest", "Jest"],
+  ];
+
+  for (const [dependency, name] of detected) {
+    if (deps[dependency] && !stack.includes(name)) stack.push(name);
+  }
+
+  return stack;
 }
 
 export const detectWorkspaces: Detector = async ({ files }) => {
@@ -179,6 +210,10 @@ export const detectWorkspaces: Detector = async ({ files }) => {
     for (const workspace of paths) {
       if (seenWorkspacePaths.has(workspace.path)) continue;
       seenWorkspacePaths.add(workspace.path);
+      const rawManifest = await files.readJson<unknown>(workspace.manifest);
+      const parsedManifest = packageJsonSchema.safeParse(rawManifest);
+      const manifest = parsedManifest.success ? parsedManifest.data : null;
+      const stack = manifest ? workspacePackageStack(manifest) : [];
       signals.push({
         kind: "workspace",
         name: workspace.path,
@@ -189,6 +224,8 @@ export const detectWorkspaces: Detector = async ({ files }) => {
           path: workspace.path,
           manager: source.manager,
           pattern: workspace.pattern,
+          ...(manifest?.name ? { packageName: manifest.name } : {}),
+          ...(stack.length > 0 ? { stack } : {}),
         },
       });
     }
