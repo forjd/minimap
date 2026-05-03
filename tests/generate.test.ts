@@ -6,6 +6,7 @@ import type { RepoScan, RepoSignal } from "../src/core/signals";
 import { renderAgentContext } from "../src/renderers/render-agent-context";
 
 const fixture = (name: string) => join(import.meta.dir, "fixtures", name);
+const repositoryRoot = join(import.meta.dir, "..");
 
 describe("renderAgentContext", () => {
   test("renders node vite vue snapshot", async () => {
@@ -20,6 +21,11 @@ describe("renderAgentContext", () => {
 
   test("renders laravel vue inertia snapshot", async () => {
     const scan = await scanRepo(fixture("laravel-vue-inertia"));
+    expect(renderAgentContext(scan)).toMatchSnapshot();
+  });
+
+  test("renders this repository AGENTS.md managed block snapshot", async () => {
+    const scan = await scanRepo(repositoryRoot);
     expect(renderAgentContext(scan)).toMatchSnapshot();
   });
 

@@ -27,7 +27,7 @@ Goal: make the existing product loop more reliable and easier to trust.
 
 - [x] Add `minimap check --target AGENTS.md` to this repository's CI and document the same pattern for downstream repositories.
 - [x] Improve drift output so stale blocks show a compact, actionable diff instead of only reporting drift.
-- [ ] Add snapshot coverage for this repository's own generated `AGENTS.md` managed block.
+- [x] Add snapshot coverage for this repository's own generated `AGENTS.md` managed block.
 - [ ] Expand risky command classification for common destructive operations:
   - [ ] Prisma migrations and resets
   - [ ] Rails database resets
