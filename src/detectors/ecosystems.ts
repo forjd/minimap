@@ -39,7 +39,7 @@ function pythonRunner(files: { exists(path: string): boolean }, text: string): s
   return "python -m";
 }
 
-function pushPythonCommand(
+function pushCommand(
   signals: RepoSignal[],
   name: string,
   value: string,
@@ -126,7 +126,7 @@ export const detectPython: Detector = async ({ files }) => {
   const commandPrefix = runner === "python -m" ? "python -m " : `${runner} `;
 
   if (hasDependency(text, "pytest") || text.includes("[tool.pytest")) {
-    pushPythonCommand(
+    pushCommand(
       signals,
       "python_tests",
       `${commandPrefix}pytest`,
@@ -137,7 +137,7 @@ export const detectPython: Detector = async ({ files }) => {
   }
 
   if (hasDependency(text, "ruff") || text.includes("[tool.ruff")) {
-    pushPythonCommand(
+    pushCommand(
       signals,
       "python_lint",
       `${commandPrefix}ruff check .`,
@@ -148,7 +148,7 @@ export const detectPython: Detector = async ({ files }) => {
   }
 
   if (hasDependency(text, "mypy") || text.includes("[tool.mypy")) {
-    pushPythonCommand(
+    pushCommand(
       signals,
       "python_typecheck",
       `${commandPrefix}mypy .`,
@@ -200,6 +200,26 @@ export const detectRust: Detector = async ({ files }) => {
     });
   }
 
+  pushCommand(signals, "rust_tests", "cargo test", "test", "Cargo.toml", "Cargo.toml present");
+  pushCommand(
+    signals,
+    "rust_format",
+    "cargo fmt --check",
+    "format",
+    "Cargo.toml",
+    "Cargo.toml present",
+  );
+  if (hasDependency(text, "clippy")) {
+    pushCommand(
+      signals,
+      "rust_lint",
+      "cargo clippy --all-targets --all-features",
+      "lint",
+      "Cargo.toml",
+      "clippy dependency detected",
+    );
+  }
+
   return signals;
 };
 
@@ -231,6 +251,19 @@ export const detectGo: Detector = async ({ files }) => {
     ["github.com/golangci/golangci-lint", "golangci-lint", "tool"],
   ]);
 
+  pushCommand(signals, "go_tests", "go test ./...", "test", "go.mod", "go.mod present");
+  pushCommand(signals, "go_format", "gofmt -w .", "format", "go.mod", "go.mod present");
+  if (hasDependency(text, "github.com/golangci/golangci-lint")) {
+    pushCommand(
+      signals,
+      "go_lint",
+      "golangci-lint run",
+      "lint",
+      "go.mod",
+      "github.com/golangci/golangci-lint dependency detected",
+    );
+  }
+
   return signals;
 };
 
@@ -259,6 +292,37 @@ export const detectRuby: Detector = async ({ files }) => {
     ["rspec", "RSpec", "test-framework"],
     ["rubocop", "RuboCop", "tool"],
   ]);
+
+  if (hasDependency(text, "rspec")) {
+    pushCommand(
+      signals,
+      "ruby_tests",
+      "bundle exec rspec",
+      "test",
+      "Gemfile",
+      "rspec dependency detected",
+    );
+  } else if (hasDependency(text, "rails")) {
+    pushCommand(
+      signals,
+      "ruby_tests",
+      "bundle exec rails test",
+      "test",
+      "Gemfile",
+      "rails dependency detected",
+    );
+  }
+
+  if (hasDependency(text, "rubocop")) {
+    pushCommand(
+      signals,
+      "ruby_lint",
+      "bundle exec rubocop",
+      "lint",
+      "Gemfile",
+      "rubocop dependency detected",
+    );
+  }
 
   return signals;
 };
@@ -323,6 +387,10 @@ export const detectJava: Detector = async ({ files }) => {
     });
   }
 
+  const commandPrefix =
+    source === "pom.xml" ? "mvn" : files.exists("gradlew") ? "./gradlew" : "gradle";
+  pushCommand(signals, "java_tests", `${commandPrefix} test`, "test", source, `${source} present`);
+
   return signals;
 };
 
@@ -363,6 +431,16 @@ export const detectDotNet: Detector = async ({ files }) => {
       evidence: "Microsoft.NET.Sdk.Web detected",
     });
   }
+
+  pushCommand(signals, "dotnet_tests", "dotnet test", "test", source, `${source} present`);
+  pushCommand(
+    signals,
+    "dotnet_format",
+    "dotnet format --verify-no-changes",
+    "format",
+    source,
+    `${source} present`,
+  );
 
   return signals;
 };

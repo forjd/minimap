@@ -43,7 +43,7 @@ Goal: increase usefulness across real repositories while preserving shallow, det
 - [x] Deepen monorepo support by scanning manifests under detected workspaces and summarizing per-workspace stack signals.
 - [x] Keep workspace output capped and deterministic for large repositories.
 - [x] Detect Python validation commands from `pyproject.toml`, uv, Poetry, pytest, Ruff, MyPy, and common scripts where available.
-- [ ] Add command hints for Go, Rust, Java, .NET, and Ruby from canonical manifest files where this can be done without running code.
+- [x] Add command hints for Go, Rust, Java, .NET, and Ruby from canonical manifest files where this can be done without running code.
 - [ ] Improve framework coverage for common agent-facing stacks:
   - [ ] Astro
   - [ ] Remix

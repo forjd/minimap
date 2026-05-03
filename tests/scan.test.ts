@@ -126,6 +126,41 @@ describe("scanRepo", () => {
         metadata: expect.objectContaining({ value: "uv run mypy .", category: "typecheck" }),
       }),
     );
+    expect(scan.signals).toContainEqual(
+      expect.objectContaining({
+        kind: "command",
+        name: "rust_tests",
+        metadata: expect.objectContaining({ value: "cargo test", category: "test" }),
+      }),
+    );
+    expect(scan.signals).toContainEqual(
+      expect.objectContaining({
+        kind: "command",
+        name: "go_tests",
+        metadata: expect.objectContaining({ value: "go test ./...", category: "test" }),
+      }),
+    );
+    expect(scan.signals).toContainEqual(
+      expect.objectContaining({
+        kind: "command",
+        name: "ruby_tests",
+        metadata: expect.objectContaining({ value: "bundle exec rspec", category: "test" }),
+      }),
+    );
+    expect(scan.signals).toContainEqual(
+      expect.objectContaining({
+        kind: "command",
+        name: "java_tests",
+        metadata: expect.objectContaining({ value: "mvn test", category: "test" }),
+      }),
+    );
+    expect(scan.signals).toContainEqual(
+      expect.objectContaining({
+        kind: "command",
+        name: "dotnet_tests",
+        metadata: expect.objectContaining({ value: "dotnet test", category: "test" }),
+      }),
+    );
   });
 
   test("detects Swift packages and SwiftUI", async () => {
