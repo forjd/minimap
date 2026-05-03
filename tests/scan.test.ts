@@ -105,6 +105,27 @@ describe("scanRepo", () => {
     for (const expected of expectedSignals) {
       expect(scan.signals).toContainEqual(expect.objectContaining(expected));
     }
+    expect(scan.signals).toContainEqual(
+      expect.objectContaining({
+        kind: "command",
+        name: "python_tests",
+        metadata: expect.objectContaining({ value: "uv run pytest", category: "test" }),
+      }),
+    );
+    expect(scan.signals).toContainEqual(
+      expect.objectContaining({
+        kind: "command",
+        name: "python_lint",
+        metadata: expect.objectContaining({ value: "uv run ruff check .", category: "lint" }),
+      }),
+    );
+    expect(scan.signals).toContainEqual(
+      expect.objectContaining({
+        kind: "command",
+        name: "python_typecheck",
+        metadata: expect.objectContaining({ value: "uv run mypy .", category: "typecheck" }),
+      }),
+    );
   });
 
   test("detects Swift packages and SwiftUI", async () => {

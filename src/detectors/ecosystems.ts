@@ -33,6 +33,30 @@ function hasSignal(signals: RepoSignal[], kind: RepoSignal["kind"], name: string
   return signals.some((signal) => signal.kind === kind && signal.name === name);
 }
 
+function pythonRunner(files: { exists(path: string): boolean }, text: string): string {
+  if (files.exists("uv.lock")) return "uv run";
+  if (files.exists("poetry.lock") || text.includes("[tool.poetry]")) return "poetry run";
+  return "python -m";
+}
+
+function pushPythonCommand(
+  signals: RepoSignal[],
+  name: string,
+  value: string,
+  category: string,
+  source: string,
+  evidence: string,
+): void {
+  signals.push({
+    kind: "command",
+    name,
+    confidence: "medium",
+    source,
+    evidence,
+    metadata: { value, category },
+  });
+}
+
 export const detectPython: Detector = async ({ files }) => {
   const source = files.exists("pyproject.toml")
     ? "pyproject.toml"
@@ -97,6 +121,42 @@ export const detectPython: Detector = async ({ files }) => {
     ["black", "Black", "tool"],
     ["mypy", "MyPy", "tool"],
   ]);
+
+  const runner = pythonRunner(files, text);
+  const commandPrefix = runner === "python -m" ? "python -m " : `${runner} `;
+
+  if (hasDependency(text, "pytest") || text.includes("[tool.pytest")) {
+    pushPythonCommand(
+      signals,
+      "python_tests",
+      `${commandPrefix}pytest`,
+      "test",
+      source,
+      "pytest dependency or config detected",
+    );
+  }
+
+  if (hasDependency(text, "ruff") || text.includes("[tool.ruff")) {
+    pushPythonCommand(
+      signals,
+      "python_lint",
+      `${commandPrefix}ruff check .`,
+      "lint",
+      source,
+      "Ruff dependency or config detected",
+    );
+  }
+
+  if (hasDependency(text, "mypy") || text.includes("[tool.mypy")) {
+    pushPythonCommand(
+      signals,
+      "python_typecheck",
+      `${commandPrefix}mypy .`,
+      "typecheck",
+      source,
+      "MyPy dependency or config detected",
+    );
+  }
 
   return signals;
 };
