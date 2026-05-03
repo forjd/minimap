@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.3.0](https://github.com/forjd/minimap/compare/v1.2.2...v1.3.0) (2026-05-03)
+
+
+### Features
+
+* add backend command hints ([886eae3](https://github.com/forjd/minimap/commit/886eae34cf90992ffd060b1e4c0b2fb2e98bf161))
+* add normalized check mode ([968a46c](https://github.com/forjd/minimap/commit/968a46cecf471fabf7d5cd7d1ba9e913ac947962))
+* classify destructive commands ([a63f2cf](https://github.com/forjd/minimap/commit/a63f2cf04fd7c977e859f2d5168bfc21e9dfd1d5))
+* configure render limits ([9fcb050](https://github.com/forjd/minimap/commit/9fcb050254ffe24a9d702995c2889e07fc222b4d))
+* detect python validation commands ([1b5ddf0](https://github.com/forjd/minimap/commit/1b5ddf0e851d9a2d35d81acee0cdd1c6fe7f7efb))
+* diverge claude profile output ([375f7a5](https://github.com/forjd/minimap/commit/375f7a55031215068af9ecc8d3e0d8a41a58d1a5))
+* show compact drift diffs ([9ca32c9](https://github.com/forjd/minimap/commit/9ca32c9049008a65bc2700c0729dd9a1fa00efae))
+* summarize workspace package stacks ([3a10fe4](https://github.com/forjd/minimap/commit/3a10fe47092acedd26c728f13a025addf1b6a1b1))
+
 ## [1.2.2](https://github.com/forjd/minimap/compare/v1.2.1...v1.2.2) (2026-05-02)
 
 
