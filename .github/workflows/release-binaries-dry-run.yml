@@ -39,6 +39,9 @@ jobs:
       - name: Build release binaries
         run: bash scripts/build-release-assets.sh
 
+      - name: Smoke test release assets
+        run: bash scripts/smoke-release-assets.sh
+
       - name: Upload release binary artifact
         uses: actions/upload-artifact@v4
         with:

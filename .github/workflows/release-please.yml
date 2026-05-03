@@ -69,6 +69,10 @@ jobs:
         if: ${{ steps.release.outputs.release_created == 'true' }}
         run: bash scripts/build-release-assets.sh
 
+      - name: Smoke test release assets
+        if: ${{ steps.release.outputs.release_created == 'true' }}
+        run: bash scripts/smoke-release-assets.sh
+
       - name: Publish to npm
         if: ${{ steps.release.outputs.release_created == 'true' || github.event_name == 'workflow_dispatch' }}
         run: npm publish --access public
