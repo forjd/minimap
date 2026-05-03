@@ -50,6 +50,33 @@ bunx @forjd/minimap write --target CLAUDE.md
 bunx @forjd/minimap check --target AGENTS.md
 ```
 
+## Examples
+
+Preview an `AGENTS.md` refresh without writing:
+
+```bash
+bunx @forjd/minimap write --target AGENTS.md --dry-run
+```
+
+Write a Claude-specific block:
+
+```bash
+bunx @forjd/minimap write --target CLAUDE.md --profile claude
+```
+
+Check drift in CI:
+
+```yaml
+- name: Check agent context drift
+  run: bunx @forjd/minimap check --target AGENTS.md
+```
+
+Check a block that was intentionally rendered with limits:
+
+```bash
+bunx @forjd/minimap check --target AGENTS.md --workspace-limit 20 --evidence-limit 8
+```
+
 If Bun is unavailable, `npx @forjd/minimap --help` can be used for basic CLI access, but Bun is the supported runtime.
 
 ## Safety Model
