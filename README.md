@@ -291,9 +291,20 @@ MVP detection covers:
 - Bun, pnpm, Yarn, and npm via lockfiles
 - PHP and Composer via `composer.json`
 - Laravel via `laravel/framework` or `artisan` plus `bootstrap/app.php`
-- Vue, React, Next.js, Nuxt, Svelte, SvelteKit, Inertia, Vite, Tailwind CSS
-- Vitest, Jest, Playwright, Cypress, Pest, PHPUnit
-- ESLint, oxlint, Biome, Pint, PHPStan, Larastan
+- Python via `pyproject.toml`, `requirements.txt`, or `setup.py`
+- Rust via `Cargo.toml`
+- Go via `go.mod`
+- Ruby via `Gemfile`
+- Java and Kotlin via Maven or Gradle project files
+- C# and F# via `.csproj`, `.fsproj`, or `.sln` files
+- Swift via `Package.swift`, Swift source files, or Xcode projects
+- C and C++ via source files, headers, `CMakeLists.txt`, or `compile_commands.json`
+- Vue, React, Next.js, Nuxt, Remix, Astro, Solid, Angular, Svelte, SvelteKit, Inertia, Vite, Tailwind CSS
+- Express, Fastify, Hono, NestJS, Django, FastAPI, Flask, Rails, Spring Boot, ASP.NET Core, Tauri, SwiftUI
+- Vitest, Jest, Mocha, Ava, Playwright, Cypress, Testing Library, Pest, PHPUnit, pytest, RSpec, JUnit, xUnit, NUnit
+- ESLint, oxlint, oxfmt, Biome, Prettier, Pint, PHPStan, Larastan, Ruff, Black, MyPy, RuboCop, CMake
+- Docker, Docker Compose, Make, Just, Task, mise, asdf, direnv
+- Vercel, Netlify, Cloudflare Workers, Fly.io, Heroku, Helm, Kubernetes
 - shallow GitHub Actions workflow presence and names
 - pnpm, npm, Yarn, and Bun workspace package manifests
 - Turborepo, Nx, and Lerna monorepo configuration files
@@ -335,6 +346,8 @@ bun run format
 ```
 
 The test suite uses fixture repositories and snapshots for generated output.
+
+For detector internals and extension guidance, see [docs/detectors.md](docs/detectors.md).
 
 ## Contributing
 
