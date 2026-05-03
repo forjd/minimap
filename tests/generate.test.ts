@@ -95,4 +95,48 @@ describe("renderAgentContext", () => {
     expect(context).toContain('stack="JavaScript, Vue"');
     expect(context).not.toContain('<workspace path="packages/pkg-41"');
   });
+
+  test("respects configurable rendering limits", () => {
+    const workspaceSignals: RepoSignal[] = Array.from({ length: 3 }, (_, index) => ({
+      kind: "workspace",
+      name: `packages/pkg-${index + 1}`,
+      confidence: "high",
+      source: "pnpm-workspace.yaml",
+      evidence: "pnpm-workspace.yaml present",
+      metadata: {
+        path: `packages/pkg-${index + 1}`,
+        manager: "pnpm",
+        pattern: "packages/*",
+      },
+    }));
+    const scan: RepoScan = {
+      cwd: "/tmp/minimap-limits",
+      generatedAt: "2026-05-02T00:00:00.000Z",
+      filesRead: [],
+      warnings: [],
+      signals: [
+        {
+          kind: "language",
+          name: "JavaScript",
+          confidence: "high",
+          source: "package.json",
+          evidence: "package.json present",
+        },
+        {
+          kind: "language",
+          name: "TypeScript",
+          confidence: "high",
+          source: "package.json",
+          evidence: "typescript dependency detected",
+        },
+        ...workspaceSignals,
+      ],
+    };
+
+    const context = renderAgentContext(scan, "agents", { evidenceLimit: 1, workspaceLimit: 1 });
+
+    expect(context.match(/<workspace path=/g)?.length).toBe(1);
+    expect(context.match(/<item source=/g)?.length).toBe(1);
+    expect(context).toContain('<workspace_overflow total="3" rendered="1" omitted="2">');
+  });
 });

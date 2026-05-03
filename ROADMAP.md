@@ -63,7 +63,7 @@ Goal: make rendered context more stable, expressive, and adaptable to agent targ
 - [x] Make profiles diverge where useful instead of keeping `agents` and `claude` identical indefinitely.
 - [x] Consider additional explicit profiles for common agent instruction targets.
 - [x] Evaluate `generate --format json|xml|markdown` only if there is a concrete consumer need.
-- [ ] Add configurable evidence and workspace rendering limits with stable defaults.
+- [x] Add configurable evidence and workspace rendering limits with stable defaults.
 - [ ] Consider a normalized check mode that ignores harmless whitespace or ordering churn while preserving exact mode as the default.
 
 ## Phase 4: Distribution And Adoption

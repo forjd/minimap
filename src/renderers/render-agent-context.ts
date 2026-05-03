@@ -4,8 +4,14 @@ import { xmlAttribute, xmlText } from "./xml";
 
 export const startMarker = "<!-- minimap:start -->";
 export const endMarker = "<!-- minimap:end -->";
-const maxRenderedWorkspaces = 40;
+const defaultEvidenceLimit = 12;
+const defaultWorkspaceLimit = 40;
 const maxWorkspaceSummaryGroups = 8;
+
+export type RenderOptions = {
+  evidenceLimit?: number;
+  workspaceLimit?: number;
+};
 
 function hasSignal(scan: RepoScan, name: string): boolean {
   return scan.signals.some((signal) => signal.name === name);
@@ -142,11 +148,11 @@ function renderPackageManagers(signals: RepoSignal[]): string[] {
   ];
 }
 
-function renderWorkspaces(signals: RepoSignal[]): string[] {
+function renderWorkspaces(signals: RepoSignal[], workspaceLimit: number): string[] {
   signals = dedupeSignalsByKindAndName(signals);
   if (signals.length === 0) return [];
-  const rendered = signals.slice(0, maxRenderedWorkspaces);
-  const omitted = signals.slice(maxRenderedWorkspaces);
+  const rendered = signals.slice(0, workspaceLimit);
+  const omitted = signals.slice(workspaceLimit);
   const allSummaryGroups = workspaceSummaryGroups(omitted);
   const summaryGroups = allSummaryGroups.slice(0, maxWorkspaceSummaryGroups);
   const remainingGroupCount = Math.max(0, allSummaryGroups.length - summaryGroups.length);
@@ -276,7 +282,7 @@ function renderProjectConventions(scan: RepoScan): string[] {
   ];
 }
 
-function renderEvidence(scan: RepoScan): string[] {
+function renderEvidence(scan: RepoScan, evidenceLimit: number): string[] {
   const seen = new Set<string>();
   const items = scan.signals
     .filter((signal) => signal.kind !== "command" && signal.kind !== "risk")
@@ -291,7 +297,7 @@ function renderEvidence(scan: RepoScan): string[] {
       seen.add(key);
       return true;
     })
-    .slice(0, 12);
+    .slice(0, evidenceLimit);
 
   if (items.length === 0) return [];
   return [
@@ -314,7 +320,13 @@ function renderWarnings(scan: RepoScan): string[] {
   ];
 }
 
-export function renderAgentContext(scan: RepoScan, profile: RenderProfile = "agents"): string {
+export function renderAgentContext(
+  scan: RepoScan,
+  profile: RenderProfile = "agents",
+  options: RenderOptions = {},
+): string {
+  const evidenceLimit = options.evidenceLimit ?? defaultEvidenceLimit;
+  const workspaceLimit = options.workspaceLimit ?? defaultWorkspaceLimit;
   const stack = signalsByKind(scan, [
     "language",
     "framework",
@@ -337,10 +349,10 @@ export function renderAgentContext(scan: RepoScan, profile: RenderProfile = "age
     "",
     ...renderStack(stack),
     ...renderPackageManagers(packageManagers),
-    ...renderWorkspaces(workspaces),
+    ...renderWorkspaces(workspaces, workspaceLimit),
     ...renderCommands(commands),
     ...renderProjectConventions(scan),
-    ...renderEvidence(scan),
+    ...renderEvidence(scan, evidenceLimit),
     ...renderWarnings(scan),
     "</repo_context>",
     endMarker,

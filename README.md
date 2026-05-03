@@ -167,6 +167,7 @@ Generate a managed context block without writing it:
 minimap generate
 minimap generate --profile agents
 minimap generate --profile claude
+minimap generate --workspace-limit 20 --evidence-limit 8
 ```
 
 The default `agents` profile keeps the generic schema. The `claude` profile adds explicit profile metadata to the generated block so `CLAUDE.md` consumers can distinguish profile-specific output.
@@ -174,6 +175,8 @@ The default `agents` profile keeps the generic schema. The `claude` profile adds
 Minimap intentionally ships only these two profiles for now. Additional targets should be added only when they need concrete output differences, not as aliases for the same block.
 
 `generate --format markdown` remains the only supported output format. JSON and raw XML output should wait for a real downstream consumer so Minimap does not carry parallel schemas prematurely.
+
+Rendering limits are configurable for large repositories. Defaults are stable at 40 workspace entries and 12 evidence items.
 
 ### Write
 
