@@ -226,6 +226,12 @@ Write behavior is conservative:
 - If multiple managed blocks are found, Minimap refuses to write.
 - Human-authored content outside the managed block is preserved.
 
+## Schema Version
+
+Generated context uses `schema_version="1"` on the root `<repo_context>` element. Version 1 is the current stable XML-shaped Markdown block format: existing element names, attributes, marker comments, and exact drift checks should be treated as part of the contract.
+
+Future schema changes should increment `schema_version` when they rename or remove elements, change attribute meanings, or make older generated blocks ambiguous for consumers. Add migration notes to this section when that happens, including what changed and whether downstream repositories should refresh blocks with `minimap write` or make manual edits.
+
 ## Safety Model
 
 Minimap is local-only and deterministic.
