@@ -32,6 +32,12 @@ Coding agents repeatedly rediscover the same repository basics:
 
 Minimap turns those signals into durable, evidence-backed instructions.
 
+## Minimap vs Hand-Written Instructions
+
+Use Minimap for facts that should stay synchronized with repository files: stack detection, package managers, validation commands, risky scripts, workspace manifests, and evidence-backed conventions. These are easy for humans to forget to update and cheap for Minimap to refresh deterministically.
+
+Use hand-authored instructions for judgment and team policy: architectural preferences, review expectations, product context, deployment rules, security constraints, and anything that is not directly inferable from local manifests. Keep that content outside the managed block so Minimap can refresh its section without overwriting it.
+
 ```mermaid
 flowchart LR
   A["Repository files"] --> B["minimap scan"]
