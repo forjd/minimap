@@ -173,6 +173,8 @@ The default `agents` profile keeps the generic schema. The `claude` profile adds
 
 Minimap intentionally ships only these two profiles for now. Additional targets should be added only when they need concrete output differences, not as aliases for the same block.
 
+`generate --format markdown` remains the only supported output format. JSON and raw XML output should wait for a real downstream consumer so Minimap does not carry parallel schemas prematurely.
+
 ### Write
 
 Create or update a managed block in a target file:
